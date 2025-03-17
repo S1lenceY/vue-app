@@ -10,6 +10,8 @@
 # LARAVEL + VUE
 ## Run
 ```sh
+php artisan serve
+
 php artisan migrate
 
 npm run dev
