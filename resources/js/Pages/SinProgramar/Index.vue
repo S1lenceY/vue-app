@@ -70,7 +70,7 @@ const updatePerPage = (event) => {
                                     scope="col"
                                     class="px-3 py-3 sticky left-0 bg-white min-w-[100px]"
                                 >
-                                    ID Positiva Aviso
+                                    ID Aviso
                                 </th>
                                 <th scope="col" class="px-4 py-3">Póliza</th>
                                 <th scope="col" class="px-4 py-3">Cultivo</th>
