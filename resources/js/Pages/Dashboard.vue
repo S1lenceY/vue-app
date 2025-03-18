@@ -17,7 +17,7 @@ const cantidadSinProgramar = page.props.cantidadSinProgramar;
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="overflow-hidden sm:rounded-lg">
                     <div class="py-6 text-green-600 font-bold">
                         Cantidad Total: {{ cantidadSinProgramar }}

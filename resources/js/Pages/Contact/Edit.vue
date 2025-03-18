@@ -53,7 +53,7 @@ const onSubmit = () => {
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div
                     class="flex justify-center overflow-hidden bg-white shadow-sm rounded-lg"
                 >

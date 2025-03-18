@@ -23,7 +23,7 @@ defineProps({
         </template>
 
         <!-- Detalles -->
-        <section class="pt-12 mx-auto space-y-4 max-w-7xl px-6 lg:px-5">
+        <section class="pt-12 mx-auto space-y-4 max-w-7xl px-4 sm:px-6 lg:px-8">
             <h3 class="text-lg font-semibold text-gray-800">Detalles</h3>
             <div class="bg-white shadow-sm sm:rounded-lg p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

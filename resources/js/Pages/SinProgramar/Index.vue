@@ -89,7 +89,7 @@ const updatePerPage = (event) => {
         </template>
 
         <!-- Filtros -->
-        <section class="pt-12 space-y-4 mx-auto max-w-7xl px-6 lg:px-5">
+        <section class="pt-12 space-y-4 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h3 class="text-lg font-semibold text-gray-800">Filtros</h3>
             <div class="flex flex-col lg:flex-row gap-4">
                 <!-- Filtro por cultivo -->
@@ -187,7 +187,7 @@ const updatePerPage = (event) => {
 
         <!-- Tabla -->
         <div class="py-12">
-            <div class="mx-auto max-w-7xl px-6 lg:px-5">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <section
                     class="overflow-x-auto bg-white shadow-sm rounded-lg"
                 >
