@@ -24,7 +24,7 @@ const onSelectAvatar = (e) => {
 };
 
 const onSubmit = () => {
-     form.post(route("contact.store"));
+    form.post(route("contact.store"));
 };
 </script>
 
@@ -37,12 +37,9 @@ const onSubmit = () => {
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
                     Crear Contacto
                 </h2>
-                <Link
-                    :href="route('contact.index')"
-                    class="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
-                >
-                    Regresar
-                </Link>
+                <PrimaryButton>
+                    <Link :href="route('contact.index')"> Regresar </Link>
+                </PrimaryButton>
             </div>
         </template>
 
@@ -51,7 +48,10 @@ const onSubmit = () => {
                 <div
                     class="flex justify-center overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
-                    <form class=" w-full md:w-1/2 py-5 px-3 space-y-5" @submit.prevent="onSubmit">
+                    <form
+                        class="w-full md:w-1/2 py-5 px-3 space-y-5"
+                        @submit.prevent="onSubmit"
+                    >
                         <div>
                             <InputLabel for="name" value="Nombre" />
 
@@ -89,10 +89,7 @@ const onSubmit = () => {
                         <div>
                             <InputLabel for="avatar" value="Avatar" />
 
-                            <FileInput
-                                name="avatar"
-                                @change="onSelectAvatar"
-                            />
+                            <FileInput name="avatar" @change="onSelectAvatar" />
 
                             <InputError
                                 class="mt-2"
@@ -102,7 +99,12 @@ const onSubmit = () => {
                         <div>
                             <InputLabel for="privacity" value="Privacidad" />
 
-                            <select name="privacity" id="privacity" class="mt-1 block rounded-md w-full border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500" v-model="form.privacity">
+                            <select
+                                name="privacity"
+                                id="privacity"
+                                class="mt-1 block rounded-md w-full border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                v-model="form.privacity"
+                            >
                                 <option value="public">Público</option>
                                 <option value="private">Privado</option>
                             </select>
@@ -112,9 +114,7 @@ const onSubmit = () => {
                                 :message="form.errors.privacity"
                             />
                         </div>
-                        <PrimaryButton>
-                            Crear Contacto
-                        </PrimaryButton>
+                        <PrimaryButton> Crear Contacto </PrimaryButton>
                     </form>
                 </div>
             </div>

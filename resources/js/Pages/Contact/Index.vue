@@ -1,8 +1,8 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
 import { ref } from "vue";
-
 
 const page = usePage();
 const contacts = ref(page.props.contacts);
@@ -21,12 +21,11 @@ const onDelete = (e) => {
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
                     Contactos
                 </h2>
-                <Link
-                    :href="route('contact.create')"
-                    class="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
-                >
-                    Crear Contacto
-                </Link>
+                <PrimaryButton>
+                    <Link :href="route('contact.create')">
+                        Crear Contacto
+                    </Link>
+                </PrimaryButton>
             </div>
         </template>
 
@@ -76,14 +75,37 @@ const onDelete = (e) => {
                                         {{ contact.privacity }}
                                     </td>
                                     <td className="px-6 py-4">
-                                        <img :src="`/storage/${contact.avatar}`" class="w-10 h-10" />
+                                        <img
+                                            :src="`/storage/${contact.avatar}`"
+                                            class="w-10 h-10"
+                                        />
                                     </td>
                                     <td className="px-6 py-4">
-                                        <div class="flex flex-col md:flex-row md:space-x-5">
-                                            <Link :href="route('contact.edit', contact)" class="text-center">
+                                        <div
+                                            class="flex flex-col md:flex-row md:space-x-5"
+                                        >
+                                            <Link
+                                                :href="
+                                                    route(
+                                                        'contact.edit',
+                                                        contact
+                                                    )
+                                                "
+                                                class="text-center"
+                                            >
                                                 Editar
                                             </Link>
-                                            <Link @success="onDelete" :href="route('contact.destroy', contact)" method="delete" as="button">
+                                            <Link
+                                                @success="onDelete"
+                                                :href="
+                                                    route(
+                                                        'contact.destroy',
+                                                        contact
+                                                    )
+                                                "
+                                                method="delete"
+                                                as="button"
+                                            >
                                                 Eliminar
                                             </Link>
                                         </div>
