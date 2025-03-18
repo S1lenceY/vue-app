@@ -16,9 +16,9 @@ defineProps({
                 <h2 class="text-xl font-semibold leading-tight text-gray-800">
                     Aviso {{ detalle.id_poliza }}
                 </h2>
-                <PrimaryButton>
-                    <Link :href="route('sinprogramar')"> Regresar </Link>
-                </PrimaryButton>
+                <Link :href="route('sinprogramar')">
+                    <PrimaryButton> Regresar </PrimaryButton>
+                </Link>
             </div>
         </template>
 

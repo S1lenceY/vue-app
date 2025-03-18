@@ -26,4 +26,10 @@ class sinprogramar extends Model
         'created_at',
         'updated_at'
     ];
+
+    // Relación uno a muchos con Llamada
+    public function llamadas()
+    {
+        return $this->hasMany(Llamada::class);
+    }
 }
