@@ -73,9 +73,13 @@ class SinprogramarController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(sinprogramar $sinprogramar)
+    public function show($id)
     {
-        //
+        //Buscar el registro por el ID
+        $detalle = sinprogramar::findOrFail($id);
+
+        // Pasar los datos a la vista
+        return Inertia::render('SinProgramar/Show', ['detalle' => $detalle,]);
     }
 
     /**

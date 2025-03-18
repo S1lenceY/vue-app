@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Head, usePage, router } from "@inertiajs/vue3";
+import { Head, usePage, router, Link } from "@inertiajs/vue3";
 import { ref } from "vue";
 
 const page = usePage();
@@ -189,7 +189,7 @@ const updatePerPage = (event) => {
         <div class="py-12">
             <div class="mx-auto max-w-7xl px-6 lg:px-5">
                 <section
-                    class="overflow-x-auto bg-white shadow-sm sm:rounded-lg"
+                    class="overflow-x-auto bg-white shadow-sm rounded-lg"
                 >
                     <table class="w-full text-xs text-left text-gray-500">
                         <thead
@@ -229,11 +229,12 @@ const updatePerPage = (event) => {
                                     scope="row"
                                     class="font-medium text-gray-900 whitespace-nowrap sticky left-0 bg-white"
                                 >
-                                    <button
+                                    <Link
+                                        :href="route('sinprogramar.show', sinprogramars.id)"
                                         class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded ml-3"
                                     >
                                         {{ sinprogramars.id_poliza }}
-                                    </button>
+                                    </Link>
                                 </th>
                                 <td class="px-2 py-2">
                                     {{ sinprogramars.poliza }}

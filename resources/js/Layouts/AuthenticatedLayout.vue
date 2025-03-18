@@ -151,6 +151,12 @@ const showingNavigationDropdown = ref(false);
                         >
                             Dashboard
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('contact.index')"
+                            :active="route().current('contact.index')"
+                        >
+                            Contacto
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->

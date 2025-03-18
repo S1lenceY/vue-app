@@ -44,9 +44,9 @@ const onSubmit = () => {
         </template>
 
         <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="mx-auto max-w-7xl px-6 lg:px-8">
                 <div
-                    class="flex justify-center overflow-hidden bg-white shadow-sm sm:rounded-lg"
+                    class="flex justify-center overflow-hidden bg-white shadow-sm rounded-lg"
                 >
                     <form
                         class="w-full md:w-1/2 py-5 px-3 space-y-5"

@@ -39,6 +39,9 @@ Route::prefix('dashboard')->middleware('auth')->group(function(){
 //Ruta Sin Programar, solo para usuarios autenticados
 Route::get('/sin-programar', [SinprogramarController::class, 'index'])->middleware(['auth', 'verified'])->name('sinprogramar');
 
+//Ruta para mostrar un registro específico
+Route::get('/sin-programar/{id}', [SinprogramarController::class, 'show'])->middleware(['auth', 'verified'])->name('sinprogramar.show');
+
 
 
 require __DIR__.'/auth.php';
