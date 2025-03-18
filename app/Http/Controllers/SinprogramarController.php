@@ -15,11 +15,43 @@ class SinprogramarController extends Controller
      */
     public function index(Request $request)
     {
+        // Obtener los parámetros de filtro
+         $filters = [
+            'cultivo' => $request->input('cultivo'),
+            'contratante' => $request->input('contratante'),
+            'tipo_evento' => $request->input('tipo_evento'),
+            'inspector' => $request->input('inspector'),
+            'ubicacion' => $request->input('ubicacion') //Filtro combinado de Departamento y Provincia
+        ];
+
+        // Construir la consulta base
+        $query = sinprogramar::where('user_id', Auth()->id());
+
+        // Aplicar filtros
+        if ($filters['ubicacion']) {
+            $query->where(function ($q) use ($filters) {
+                $q->where('departamento', 'LIKE', '%' . $filters['ubicacion'] . '%')
+                ->orWhere('provincia', 'LIKE', '%' . $filters['ubicacion'] . '%');
+            });
+        }
+        if ($filters['cultivo']) {
+            $query->where('cultivo', 'LIKE', '%' . $filters['cultivo'] . '%');
+         }
+        if ($filters['contratante']) {
+            $query->where('contratante', 'LIKE', '%' . $filters['contratante'] . '%');
+        }
+        if ($filters['tipo_evento']) {
+            $query->where('tipo_evento', $filters['tipo_evento']);
+        }
+        if ($filters['inspector']) {
+            $query->where('inspector', 'LIKE', '%' . $filters['inspector'] . '%');
+        }
+
         // Obtener el número de registros por página desde la solicitud (por defecto 5)
         $perPage = $request->input('per_page', 5);
+        $sinprogramar = $query->paginate($perPage)->withQueryString();
 
-        $sinprogramar = sinprogramar::where('user_id', Auth()->id())->paginate($perPage);
-        return Inertia::render('SinProgramar/Index', compact('sinprogramar'));
+        return Inertia::render('SinProgramar/Index', compact('sinprogramar', 'filters'));
     }
 
     /**

@@ -6,6 +6,45 @@ import { ref } from "vue";
 const page = usePage();
 const sinprogramar = ref(page.props.sinprogramar); // Datos paginados
 const perPage = ref(page.props.ziggy.query?.per_page || 5); // Número de registros por página
+const filters = ref(page.props.filters || {}); // Valores de los filtros
+
+// Función para aplicar filtros
+const applyFilters = () => {
+    const url = new URL(window.location.href);
+
+    // Limpiar los parámetros de filtro existentes
+    url.searchParams.delete("cultivo");
+    url.searchParams.delete("contratante");
+    url.searchParams.delete("tipo_evento");
+    url.searchParams.delete("inspector");
+    url.searchParams.delete("ubicacion");
+
+    // Agregar los nuevos parámetros de filtro
+    if (filters.value.cultivo) {
+        url.searchParams.set("cultivo", filters.value.cultivo);
+    }
+    if (filters.value.contratante) {
+        url.searchParams.set("contratante", filters.value.contratante);
+    }
+    if (filters.value.tipo_evento) {
+        url.searchParams.set("tipo_evento", filters.value.tipo_evento);
+    }
+    if (filters.value.inspector) {
+        url.searchParams.set("inspector", filters.value.inspector);
+    }
+    if (filters.value.ubicacion) {
+        url.searchParams.set("ubicacion", filters.value.ubicacion);
+    }
+
+    // Navegar a la nueva URL
+    router.visit(url.toString(), {
+        preserveState: true,
+        replace: true,
+        onSuccess: (response) => {
+            sinprogramar.value = response.props.sinprogramar;
+        },
+    });
+};
 
 // Función para cambiar de página
 const changePage = (url) => {
@@ -50,14 +89,105 @@ const updatePerPage = (event) => {
         </template>
 
         <!-- Filtros -->
-        <section class="pt-12 space-y-4 mx-auto max-w-7xl sm:px-6 lg:px-5">
+        <section class="pt-12 space-y-4 mx-auto max-w-7xl px-6 lg:px-5">
             <h3 class="text-lg font-semibold text-gray-800">Filtros</h3>
-            <div>Añadir Filtros</div>
+            <div class="flex flex-col lg:flex-row gap-4">
+                <!-- Filtro por cultivo -->
+                <div>
+                    <label
+                        for="filter-cultivo"
+                        class="block text-sm font-medium text-gray-700"
+                        >Cultivo</label
+                    >
+                    <input
+                        id="filter-cultivo"
+                        v-model="filters.cultivo"
+                        @input="applyFilters"
+                        type="text"
+                        placeholder="Buscar por cultivo"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                    />
+                </div>
+
+                <!-- Filtro por contratante -->
+                <div>
+                    <label
+                        for="filter-contratante"
+                        class="block text-sm font-medium text-gray-700"
+                        >Contratante</label
+                    >
+                    <input
+                        id="filter-contratante"
+                        v-model="filters.contratante"
+                        @input="applyFilters"
+                        type="text"
+                        placeholder="Buscar por contratante"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                    />
+                </div>
+
+                <!-- Filtro por tipo de evento -->
+                <div>
+                    <label
+                        for="filter-tipo-evento"
+                        class="block text-sm font-medium text-gray-700"
+                        >Tipo de Evento</label
+                    >
+                    <select
+                        id="filter-tipo-evento"
+                        v-model="filters.tipo_evento"
+                        @change="applyFilters"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                    >
+                        <option value="">Todos</option>
+                        <option value="ALEJANDRO_TORRES">Granizo</option>
+                        <option value="INCENDIO">Incendio</option>
+                        <option value="INUNDACIÓN">Inundación</option>
+                        <option value="SEQUIA">Sequía</option>
+                        <option value="VIENTO">Viento</option>
+                        <option value="OTROS">Otros</option>
+                    </select>
+                </div>
+
+                <!-- Filtro por inspector -->
+                <div>
+                    <label
+                        for="filter-inspector"
+                        class="block text-sm font-medium text-gray-700"
+                        >Inspector</label
+                    >
+                    <input
+                        id="filter-inspector"
+                        v-model="filters.inspector"
+                        @input="applyFilters"
+                        type="text"
+                        placeholder="Buscar por inspector"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                    />
+                </div>
+
+                <!-- Filtro por ubicación (departamento/provincia) -->
+                <div>
+                    <label
+                        for="filter-ubicacion"
+                        class="block text-sm font-medium text-gray-700"
+                        >Ubicación</label
+                    >
+                    <input
+                        id="filter-ubicacion"
+                        v-model="filters.ubicacion"
+                        @input="applyFilters"
+                        type="text"
+                        placeholder="Buscar por ubicación"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                    />
+                </div>
+            </div>
         </section>
 
         <!-- Tabla -->
         <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-5">
+            <div class="mx-auto max-w-7xl px-6 lg:px-5">
                 <section
                     class="overflow-x-auto bg-white shadow-sm sm:rounded-lg"
                 >
