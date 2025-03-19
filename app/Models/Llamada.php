@@ -19,4 +19,5 @@ class Llamada extends Model
     {
         return $this->belongsTo(sinprogramar::class);
     }
+
 }

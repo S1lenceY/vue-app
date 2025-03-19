@@ -2,10 +2,101 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Head, Link } from "@inertiajs/vue3";
+import { ref } from "vue";
+import axios from "axios";
+import Modal from "@/Components/Modal.vue"; // Importar el componente Modal.vue
+import ScheduleForm from "./ScheduleForm.vue";
 
-defineProps({
-    detalle: Object, // Propiedad que contiene los datos del registro
+// Definir las props
+const props = defineProps({
+    detalle: Object, // Detalles del aviso sin programación
 });
+
+// Estado local
+const mostrarModal = ref(false);
+const editando = ref(false);
+const formulario = ref({
+    contact_date: "",
+    program_date: "",
+    is_success: true,
+    comment: "",
+    audio_path: "",
+});
+
+// Función para abrir el modal
+const abrirModal = (llamada) => {
+    if (llamada) {
+        editando.value = true;
+        formulario.value = { ...llamada };
+    } else {
+        editando.value = false;
+        formulario.value = {
+            contact_date: "",
+            program_date: "",
+            is_success: true,
+            comment: "",
+            audio_path: "",
+        };
+    }
+    mostrarModal.value = true; // Abrir el modal
+};
+
+// Función para cerrar el modal
+const cerrarModal = () => {
+    mostrarModal.value = false; // Cerrar el modal
+};
+
+// Función para guardar una llamada
+const guardarLlamada = async () => {
+    try {
+        const url = editando.value
+            ? route("llamadas.update", {
+                  id: props.detalle.id,
+                  llamada: formulario.value.id,
+              })
+            : route("llamadas.store", { id: props.detalle.id });
+
+        const method = editando.value ? "put" : "post";
+
+        const response = await axios[method](url, formulario.value);
+
+        // Actualizar el estado local con los datos devueltos por el servidor
+        props.detalle.llamadas = response.data.detalle.llamadas;
+
+        // Cerrar el modal
+        cerrarModal();
+    } catch (error) {
+        console.error("Error al guardar la llamada:", error);
+    }
+};
+
+// Función para eliminar una llamada
+const eliminarLlamada = async (id) => {
+    if (!confirm("¿Estás seguro de eliminar esta llamada?")) return;
+
+    try {
+        const response = await axios.delete(
+            route("llamadas.destroy", { id: props.detalle.id, llamada: id })
+        );
+
+        // Actualizar el estado local con los datos devueltos por el servidor
+        props.detalle.llamadas = response.data.detalle.llamadas;
+    } catch (error) {
+        console.error("Error al eliminar la llamada:", error);
+    }
+};
+
+const formatFecha = (fecha) => {
+    return new Date(fecha).toLocaleString('es-PE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+};
 </script>
 
 <template>
@@ -17,7 +108,7 @@ defineProps({
                     Aviso {{ detalle.id_poliza }}
                 </h2>
                 <Link :href="route('sinprogramar')">
-                    <PrimaryButton> Regresar </PrimaryButton>
+                    <PrimaryButton>Regresar</PrimaryButton>
                 </Link>
             </div>
         </template>
@@ -66,5 +157,101 @@ defineProps({
                 </div>
             </div>
         </section>
+
+        <!-- Llamadas -->
+        <div class="py-6">
+            <div class="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-lg font-semibold text-gray-800">
+                        Llamadas
+                    </h3>
+                    <PrimaryButton @click="abrirModal">Añadir</PrimaryButton>
+                </div>
+                <section class="overflow-x-auto bg-white shadow-sm rounded-lg">
+                    <table class="w-full text-xs text-left text-gray-500">
+                        <thead
+                            class="text-xs text-black font-bold uppercase bg-white border-b"
+                        >
+                            <tr>
+                                <th class="px-1 py-3">#</th>
+                                <th scope="col" class="px-1 py-3">
+                                    Fecha de Contacto
+                                </th>
+                                <th scope="col" class="px-1 py-3">
+                                    Fecha Programada
+                                </th>
+                                <th scope="col" class="px-1 py-3">
+                                    Comentario
+                                </th>
+                                <th scope="col" class="px-1 py-3">Éxito</th>
+                                <th scope="col" class="px-1 py-3">
+                                    Fecha y Hora Registro
+                                </th>
+                                <th scope="col" class="px-1 py-3">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody
+                            class="text-slate-900 text-xs font-normal leading-none"
+                        >
+                            <tr
+                                v-for="(llamada, i) in detalle.llamadas"
+                                :key="llamada.id"
+                                class="bg-white border-b"
+                            >
+                                <td class="px-1 py-3">
+                                    {{ i + 1 }}
+                                </td>
+                                <td class="px-1 py-3">
+                                    {{ llamada.contact_date }}
+                                </td>
+                                <td class="px-1 py-3">
+                                    {{ llamada.program_date }}
+                                </td>
+                                <td class="px-1 py-3 max-w-10">
+                                    {{ llamada.comment }}
+                                </td>
+                                <td class="px-1 py-3">
+                                    <span
+                                        :class="{
+                                            'p-2 bg-green-500 text-white rounded-lg':
+                                                llamada.is_success,
+                                            'p-2 bg-red-500 text-white rounded-lg':
+                                                !llamada.is_success,
+                                        }"
+                                        >{{
+                                            llamada.is_success ? "Sí" : "No"
+                                        }}</span
+                                    >
+                                </td>
+                                <td class="px-1 py-3">
+                                    {{ formatFecha(llamada.created_at) }}
+                                </td>
+                                <td class="space-x-4 px-1 py-3">
+                                    <button @click="abrirModal(llamada)">
+                                        ✏️
+                                    </button>
+                                    <button
+                                        @click="eliminarLlamada(llamada.id)"
+                                    >
+                                        🗑️
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <Modal :show="mostrarModal" @close="cerrarModal" maxWidth="2xl">
+            <ScheduleForm
+                :detalle="detalle"
+                :formulario="formulario"
+                :editando="editando"
+                @submit="guardarLlamada"
+                @close="cerrarModal"
+            />
+        </Modal>
     </AuthenticatedLayout>
 </template>

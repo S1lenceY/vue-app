@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\sinprogramar;
+use App\Models\Llamada;
 use Illuminate\Http\Request;
+use App\Http\Requests\Llamada\StoreRequest;
+use App\Http\Requests\Llamada\UpdateRequest;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,54 +58,65 @@ class SinprogramarController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show($id)
     {
         //Buscar el registro por el ID
-        $detalle = sinprogramar::findOrFail($id);
+        $detalle = sinprogramar::with('llamadas')->findOrFail($id);
 
         // Pasar los datos a la vista
         return Inertia::render('SinProgramar/Show', ['detalle' => $detalle,]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Crear una nueva llamada asociada a un aviso sin programación.
      */
-    public function edit(sinprogramar $sinprogramar)
+    public function storeLlamada(StoreRequest $request, $id)
     {
-        //
+        $sinProgramar = sinprogramar::findOrFail($id);
+
+        // Crear la nueva llamada
+        $sinProgramar->llamadas()->create($request->validated());
+
+        // Devolver los datos actualizados
+        return response()->json([
+            'detalle' => $sinProgramar->fresh('llamadas'),
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, sinprogramar $sinprogramar)
+    * Actualizar una llamada existente.
+    */
+    public function updateLlamada(UpdateRequest $request, $id, $llamadaId)
     {
-        //
+        // Buscar la llamada específica asociada al aviso sin programación
+        $llamada = Llamada::where('sinprogramar_id', $id)->findOrFail($llamadaId);
+
+        // Actualizar la llamada con los datos validados
+        $llamada->update($request->validated());
+
+        // Devolver los datos actualizados del aviso sin programación
+        $sinProgramar = SinProgramar::findOrFail($id);
+        return response()->json([
+            'detalle' => $sinProgramar->fresh('llamadas'),
+        ]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Eliminar una llamada existente.
      */
-    public function destroy(sinprogramar $sinprogramar)
+    public function destroyLlamada($id, $llamadaId)
     {
-        //
+        $llamada = Llamada::where('sinprogramar_id', $id)->findOrFail($llamadaId);
+
+        // Eliminar la llamada
+        $llamada->delete();
+
+        // Devolver los datos actualizados
+        $sinProgramar = sinprogramar::findOrFail($id);
+        return response()->json([
+            'detalle' => $sinProgramar->fresh('llamadas'),
+        ]);
     }
 }

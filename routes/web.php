@@ -39,9 +39,12 @@ Route::prefix('dashboard')->middleware('auth')->group(function(){
 //Ruta Sin Programar, solo para usuarios autenticados
 Route::get('/sin-programar', [SinprogramarController::class, 'index'])->middleware(['auth', 'verified'])->name('sinprogramar');
 
-//Ruta para mostrar un registro específico
-Route::get('/sin-programar/{id}', [SinprogramarController::class, 'show'])->middleware(['auth', 'verified'])->name('sinprogramar.show');
-
+Route::prefix('sin-programar/{id}')->middleware(['auth', 'verified'])->group(function(){
+    Route::get('/', [SinProgramarController::class, 'show'])->name('sinprogramar.show');
+    Route::post('/llamadas', [SinProgramarController::class, 'storeLlamada'])->name('llamadas.store');
+    Route::put('/llamadas/{llamada}', [SinProgramarController::class, 'updateLlamada'])->name('llamadas.update');
+    Route::delete('/llamadas/{llamada}', [SinProgramarController::class, 'destroyLlamada'])->name('llamadas.destroy');
+});
 
 
 require __DIR__.'/auth.php';
