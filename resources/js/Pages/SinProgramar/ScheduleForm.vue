@@ -1,4 +1,6 @@
 <script setup>
+import AudioInput from "@/Components/AudioInput.vue";
+
 import { ref, onMounted } from "vue";
 
 // Definir las props
@@ -31,81 +33,66 @@ const closeModal = () => {
 </script>
 
 <template>
-    <form @submit.prevent="handleSave">
-        <!-- Campos del formulario -->
-        <div class="mb-4">
+    <form @submit.prevent="handleSave" class="p-4 space-y-4">
+        <div class="border-b border-gray-200">
             <h3 v-if="editando" class="text-lg font-semibold">
                 Editar Llamada
             </h3>
             <h3 v-else class="text-lg font-semibold">Crear Llamada</h3>
         </div>
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700"
-                >Fecha de Contacto:</label
-            >
-            <input
-                v-model="form.contact_date"
-                type="date"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                required
-            />
+        <div class="flex flex-col md:flex-row gap-4">
+            <div class="w-full">
+                <label class="block text-sm font-medium text-gray-700"
+                    >Fecha de Contacto:</label
+                >
+                <input
+                    v-model="form.contact_date"
+                    type="date"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                    required
+                />
+            </div>
+            <div class="w-full">
+                <label class="block text-sm font-medium text-gray-700"
+                    >Fecha Programada:</label
+                >
+                <input
+                    v-model="form.program_date"
+                    type="date"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                />
+            </div>
+            <div class="w-full" v-if="!editando">
+                <label class="block text-sm font-medium text-gray-700"
+                    >Éxito:</label
+                >
+                <select
+                    v-model="form.is_success"
+                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
+                    required
+                >
+                    <option :value="true">Sí</option>
+                    <option :value="false">No</option>
+                </select>
+            </div>
         </div>
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700"
-                >Fecha Programada:</label
-            >
-            <input
-                v-model="form.program_date"
-                type="date"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            />
-        </div>
-        <div class="mb-4" v-if="!editando">
-            <label class="block text-sm font-medium text-gray-700"
-                >Éxito:</label
-            >
-            <select
-                v-model="form.is_success"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                required
-            >
-                <option :value="true">Sí</option>
-                <option :value="false">No</option>
-            </select>
-        </div>
-        <div class="mb-4">
+        <div>
             <label class="block text-sm font-medium text-gray-700"
                 >Comentario:</label
             >
             <textarea
                 v-model="form.comment"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
             ></textarea>
         </div>
-        <div class="mb-4" v-if="!editando">
-            <label class="block text-sm font-medium text-gray-700"
-                >Ruta de Audio:</label
-            >
-            <input
-                v-model="form.audio_path"
-                type="text"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            />
-        </div>
-        <div class="flex justify-end space-x-2">
-            <button
-                type="button"
-                @click="closeModal"
-                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-            >
-                Cancelar
-            </button>
-            <button
-                type="submit"
-                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-            >
-                Guardar
-            </button>
+        <div class="flex flex-col md:flex-row justify-between md:items-center">
+            <div class="mb-4 md:mb-0">
+                <AudioInput name="file"/>
+            </div>
+            <div class="flex gap-3 text-sm h-full">
+                <button type="button" @click="closeModal" class="bg-gray-500 hover:bg-gray-700 text-white px-3 py-2 rounded w-full">Cancelar</button>
+                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded w-full">Guardar</button>
+            </div>
         </div>
     </form>
 </template>

@@ -247,7 +247,7 @@ const formatFecha = (fecha) => {
         </div>
 
         <!-- Modal -->
-        <Modal :show="mostrarModal" @close="cerrarModal" maxWidth="2xl">
+        <Modal :show="mostrarModal" @close="cerrarModal" maxWidth="xl">
             <ScheduleForm
                 :detalle="detalle"
                 :formulario="formulario"
