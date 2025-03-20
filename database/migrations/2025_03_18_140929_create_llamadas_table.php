@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('llamadas', function (Blueprint $table) {
             $table->id();
             $table->date("contact_date");
-            $table->date("program_date");
+            $table->date("program_date")->nullable();
             $table->boolean("is_success");
-            $table->text("comment");
+            $table->text("comment")->nullable();
             $table->string("audio_path")->nullable();
             $table->foreignId('sinprogramar_id')->constrained();
             $table->timestamps();

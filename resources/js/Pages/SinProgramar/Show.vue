@@ -18,7 +18,7 @@ const editando = ref(false);
 
 const formulario = ref({
     contact_date: "",
-    program_date: "",
+    program_date: null,
     is_success: true,
     comment: "",
     audio_path: "",
@@ -208,7 +208,7 @@ const formatFecha = (fecha) => {
                                     {{ llamada.contact_date }}
                                 </td>
                                 <td class="px-4 py-2">
-                                    {{ llamada.program_date }}
+                                    {{ llamada.program_date ? llamada.program_date : "-" }}
                                 </td>
                                 <td class="px-4 py-2 min-w-40 max-w-40">
                                     {{ llamada.comment }}
@@ -216,9 +216,9 @@ const formatFecha = (fecha) => {
                                 <td class="px-4 py-2">
                                     <span
                                         :class="{
-                                            'p-2 bg-green-500 text-white rounded-lg':
+                                            'px-3 p-1 bg-green-500 text-white rounded-lg':
                                                 llamada.is_success,
-                                            'p-2 bg-red-500 text-white rounded-lg':
+                                            'px-2 p-1 bg-red-500 text-white rounded-lg':
                                                 !llamada.is_success,
                                         }"
                                         >{{
