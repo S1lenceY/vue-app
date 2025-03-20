@@ -6,6 +6,7 @@ import { ref } from "vue";
 import axios from "axios";
 import Modal from "@/Components/Modal.vue"; // Importar el componente Modal.vue
 import ScheduleForm from "./ScheduleForm.vue";
+import ScheduleDelete from "./ScheduleDelete.vue";
 
 // Definir las props
 const props = defineProps({
@@ -49,7 +50,7 @@ const cerrarModal = () => {
     mostrarModal.value = false; // Cerrar el modal
 };
 
-// Función para guardar una llamada
+// Función para guardar y editar una llamada
 const guardarLlamada = async () => {
     try {
         const url = editando.value
@@ -74,16 +75,35 @@ const guardarLlamada = async () => {
 };
 
 // Función para eliminar una llamada
-const eliminarLlamada = async (id) => {
-    if (!confirm("¿Estás seguro de eliminar esta llamada?")) return;
+const mostrarModalEliminar = ref(false);
+const llamadaAEliminar = ref(null);
+
+const abrirModalEliminar = (id) => {
+    llamadaAEliminar.value = id;
+    mostrarModalEliminar.value = true;
+};
+
+const cerrarModalEliminar = () => {
+    mostrarModalEliminar.value = false;
+};
+
+const confirmarEliminarLlamada = async () => {
+    if (!llamadaAEliminar.value) return;
 
     try {
         const response = await axios.delete(
-            route("llamadas.destroy", { id: props.detalle.id, llamada: id })
+            route("llamadas.destroy", {
+                id: props.detalle.id,
+                llamada: llamadaAEliminar.value,
+            })
         );
 
         // Actualizar el estado local con los datos devueltos por el servidor
         props.detalle.llamadas = response.data.detalle.llamadas;
+
+        // Cerrar el modal y resetear valores
+        cerrarModalEliminar();
+        llamadaAEliminar.value = null;
     } catch (error) {
         console.error("Error al eliminar la llamada:", error);
     }
@@ -230,7 +250,7 @@ const formatFecha = (fecha) => {
                             </td>
                             <td class="space-x-4 px-4 py-2">
                                 <button @click="abrirModal(llamada)">✏️</button>
-                                <button @click="eliminarLlamada(llamada.id)">
+                                <button @click="abrirModalEliminar(llamada.id)">
                                     🗑️
                                 </button>
                             </td>
@@ -240,7 +260,7 @@ const formatFecha = (fecha) => {
             </section>
         </div>
 
-        <!-- Modal -->
+        <!-- Modal de Guardar o Editar -->
         <Modal :show="mostrarModal" @close="cerrarModal" maxWidth="xl">
             <ScheduleForm
                 :detalle="detalle"
@@ -248,6 +268,19 @@ const formatFecha = (fecha) => {
                 :editando="editando"
                 @submit="guardarLlamada"
                 @close="cerrarModal"
+            />
+        </Modal>
+
+        <!-- Modal para Eliminar -->
+        <Modal
+            :show="mostrarModalEliminar"
+            @close="cerrarModalEliminar"
+            maxWidth="md"
+        >
+            <ScheduleDelete
+                :show="mostrarModalEliminar"
+                @close="cerrarModalEliminar"
+                @confirm="confirmarEliminarLlamada"
             />
         </Modal>
     </AuthenticatedLayout>
