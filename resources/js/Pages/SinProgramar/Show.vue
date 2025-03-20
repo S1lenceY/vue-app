@@ -36,7 +36,7 @@ const abrirModal = (llamada) => {
         formulario.value = {
             contact_date: "",
             program_date: "",
-            is_success: true,
+            is_success: null,
             comment: "",
             audio_path: "",
         };

@@ -33,7 +33,7 @@ const closeModal = () => {
 </script>
 
 <template>
-    <form @submit.prevent="handleSave" class="p-4 space-y-4">
+    <form @submit.prevent="handleSave" class="p-4 space-y-5">
         <div class="border-b border-gray-200">
             <h3 v-if="editando" class="text-lg font-semibold">
                 Editar Llamada
@@ -86,11 +86,11 @@ const closeModal = () => {
             ></textarea>
         </div>
         <div class="flex flex-col md:flex-row justify-between md:items-center">
-            <div class="mb-4 md:mb-0">
+            <div class="mb-4 md:mb-0" v-if="!editando">
                 <AudioInput name="file"/>
             </div>
             <div class="flex gap-3 text-sm h-full">
-                <button type="button" @click="closeModal" class="bg-gray-500 hover:bg-gray-700 text-white px-3 py-2 rounded w-full">Cancelar</button>
+                <button type="button" @click="closeModal" class="bg-white border border-green-500 hover:bg-green-500 text-gray-700 hover:text-white transition-colors px-3 py-2 rounded w-full">Cancelar</button>
                 <button type="submit" class="bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded w-full">Guardar</button>
             </div>
         </div>
