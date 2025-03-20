@@ -1,11 +1,16 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 // Definir las props
 const props = defineProps({
     detalle: Object, // Detalles del aviso sin programación
     formulario: Object,
     editando: Boolean,
+});
+
+console.log("Props recibidas:", props); // Depuración
+onMounted(() => {
+    console.log("Valor de editando al montar:", props.editando); // Depuración
 });
 
 // Emitir eventos al padre
@@ -29,6 +34,12 @@ const closeModal = () => {
     <form @submit.prevent="handleSave">
         <!-- Campos del formulario -->
         <div class="mb-4">
+            <h3 v-if="editando" class="text-lg font-semibold">
+                Editar Llamada
+            </h3>
+            <h3 v-else class="text-lg font-semibold">Crear Llamada</h3>
+        </div>
+        <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700"
                 >Fecha de Contacto:</label
             >
@@ -49,13 +60,14 @@ const closeModal = () => {
                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             />
         </div>
-        <div class="mb-4">
+        <div class="mb-4" v-if="!editando">
             <label class="block text-sm font-medium text-gray-700"
                 >Éxito:</label
             >
             <select
                 v-model="form.is_success"
                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                required
             >
                 <option :value="true">Sí</option>
                 <option :value="false">No</option>
@@ -70,7 +82,7 @@ const closeModal = () => {
                 class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
             ></textarea>
         </div>
-        <div class="mb-4">
+        <div class="mb-4" v-if="!editando">
             <label class="block text-sm font-medium text-gray-700"
                 >Ruta de Audio:</label
             >

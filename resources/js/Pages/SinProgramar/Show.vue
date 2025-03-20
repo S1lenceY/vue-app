@@ -15,6 +15,7 @@ const props = defineProps({
 // Estado local
 const mostrarModal = ref(false);
 const editando = ref(false);
+
 const formulario = ref({
     contact_date: "",
     program_date: "",
@@ -27,9 +28,11 @@ const formulario = ref({
 const abrirModal = (llamada) => {
     if (llamada) {
         editando.value = true;
+        console.log("Editando:", editando.value); // Depuración
         formulario.value = { ...llamada };
     } else {
         editando.value = false;
+        console.log("Creando:", editando.value); // Depuración
         formulario.value = {
             contact_date: "",
             program_date: "",
@@ -165,7 +168,7 @@ const formatFecha = (fecha) => {
                     <h3 class="text-lg font-semibold text-gray-800">
                         Llamadas
                     </h3>
-                    <PrimaryButton @click="abrirModal">Añadir</PrimaryButton>
+                    <PrimaryButton @click="abrirModal(null)">Añadir</PrimaryButton>
                 </div>
                 <section class="overflow-x-auto bg-white shadow-sm rounded-lg">
                     <table class="w-full text-xs text-left text-gray-500">
@@ -173,21 +176,21 @@ const formatFecha = (fecha) => {
                             class="text-xs text-black font-bold uppercase bg-white border-b"
                         >
                             <tr>
-                                <th class="px-1 py-3">#</th>
-                                <th scope="col" class="px-1 py-3">
+                                <th class="px-2 py-2">#</th>
+                                <th scope="col" class="px-4 py-3 text-nowrap">
                                     Fecha de Contacto
                                 </th>
-                                <th scope="col" class="px-1 py-3">
+                                <th scope="col" class="px-4 py-3 text-nowrap">
                                     Fecha Programada
                                 </th>
-                                <th scope="col" class="px-1 py-3">
+                                <th scope="col" class="px-4 py-3">
                                     Comentario
                                 </th>
-                                <th scope="col" class="px-1 py-3">Éxito</th>
-                                <th scope="col" class="px-1 py-3">
+                                <th scope="col" class="px-4 py-3">Éxito</th>
+                                <th scope="col" class="px-4 py-3 text-nowrap">
                                     Fecha y Hora Registro
                                 </th>
-                                <th scope="col" class="px-1 py-3">Acciones</th>
+                                <th scope="col" class="px-4 py-3">Acciones</th>
                             </tr>
                         </thead>
                         <tbody
@@ -198,19 +201,19 @@ const formatFecha = (fecha) => {
                                 :key="llamada.id"
                                 class="bg-white border-b"
                             >
-                                <td class="px-1 py-3">
+                                <td class="px-2 py-2">
                                     {{ i + 1 }}
                                 </td>
-                                <td class="px-1 py-3">
+                                <td class="px-4 py-2">
                                     {{ llamada.contact_date }}
                                 </td>
-                                <td class="px-1 py-3">
+                                <td class="px-4 py-2">
                                     {{ llamada.program_date }}
                                 </td>
-                                <td class="px-1 py-3 max-w-10">
+                                <td class="px-4 py-2 min-w-40 max-w-40">
                                     {{ llamada.comment }}
                                 </td>
-                                <td class="px-1 py-3">
+                                <td class="px-4 py-2">
                                     <span
                                         :class="{
                                             'p-2 bg-green-500 text-white rounded-lg':
@@ -223,10 +226,10 @@ const formatFecha = (fecha) => {
                                         }}</span
                                     >
                                 </td>
-                                <td class="px-1 py-3">
+                                <td class="px-4 py-2">
                                     {{ formatFecha(llamada.created_at) }}
                                 </td>
-                                <td class="space-x-4 px-1 py-3">
+                                <td class="space-x-4 px-4 py-2">
                                     <button @click="abrirModal(llamada)">
                                         ✏️
                                     </button>
