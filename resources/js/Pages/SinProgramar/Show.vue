@@ -90,14 +90,14 @@ const eliminarLlamada = async (id) => {
 };
 
 const formatFecha = (fecha) => {
-    return new Date(fecha).toLocaleString('es-PE', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
+    return new Date(fecha).toLocaleString("es-PE", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false,
     });
 };
 </script>
@@ -117,7 +117,7 @@ const formatFecha = (fecha) => {
         </template>
 
         <!-- Detalles -->
-        <section class="pt-12 mx-auto space-y-4 max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section class="pt-6 mx-auto space-y-4 max-w-7xl px-4 sm:px-6 lg:px-8">
             <h3 class="text-lg font-semibold text-gray-800">Detalles</h3>
             <div class="bg-white shadow-sm sm:rounded-lg p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -162,88 +162,82 @@ const formatFecha = (fecha) => {
         </section>
 
         <!-- Llamadas -->
-        <div class="py-6">
-            <div class="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between items-center">
-                    <h3 class="text-lg font-semibold text-gray-800">
-                        Llamadas
-                    </h3>
-                    <PrimaryButton @click="abrirModal(null)">Añadir</PrimaryButton>
-                </div>
-                <section class="overflow-x-auto bg-white shadow-sm rounded-lg">
-                    <table class="w-full text-xs text-left text-gray-500">
-                        <thead
-                            class="text-xs text-black font-bold uppercase bg-white border-b"
-                        >
-                            <tr>
-                                <th class="px-2 py-2">#</th>
-                                <th scope="col" class="px-4 py-3 text-nowrap">
-                                    Fecha de Contacto
-                                </th>
-                                <th scope="col" class="px-4 py-3 text-nowrap">
-                                    Fecha Programada
-                                </th>
-                                <th scope="col" class="px-4 py-3">
-                                    Comentario
-                                </th>
-                                <th scope="col" class="px-4 py-3">Éxito</th>
-                                <th scope="col" class="px-4 py-3 text-nowrap">
-                                    Fecha y Hora Registro
-                                </th>
-                                <th scope="col" class="px-4 py-3">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody
-                            class="text-slate-900 text-xs font-normal leading-none"
-                        >
-                            <tr
-                                v-for="(llamada, i) in detalle.llamadas"
-                                :key="llamada.id"
-                                class="bg-white border-b"
-                            >
-                                <td class="px-2 py-2">
-                                    {{ i + 1 }}
-                                </td>
-                                <td class="px-4 py-2">
-                                    {{ llamada.contact_date }}
-                                </td>
-                                <td class="px-4 py-2">
-                                    {{ llamada.program_date ? llamada.program_date : "-" }}
-                                </td>
-                                <td class="px-4 py-2 min-w-40 max-w-40">
-                                    {{ llamada.comment }}
-                                </td>
-                                <td class="px-4 py-2">
-                                    <span
-                                        :class="{
-                                            'px-3 p-1 bg-green-500 text-white rounded-lg':
-                                                llamada.is_success,
-                                            'px-2 p-1 bg-red-500 text-white rounded-lg':
-                                                !llamada.is_success,
-                                        }"
-                                        >{{
-                                            llamada.is_success ? "Sí" : "No"
-                                        }}</span
-                                    >
-                                </td>
-                                <td class="px-4 py-2">
-                                    {{ formatFecha(llamada.created_at) }}
-                                </td>
-                                <td class="space-x-4 px-4 py-2">
-                                    <button @click="abrirModal(llamada)">
-                                        ✏️
-                                    </button>
-                                    <button
-                                        @click="eliminarLlamada(llamada.id)"
-                                    >
-                                        🗑️
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
+        <div class="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-800">Llamadas</h3>
+                <PrimaryButton @click="abrirModal(null)">Añadir</PrimaryButton>
             </div>
+            <section class="overflow-x-auto bg-white shadow-sm rounded-lg">
+                <table class="w-full text-xs text-left text-gray-500">
+                    <thead
+                        class="text-xs text-black font-bold uppercase bg-white border-b"
+                    >
+                        <tr>
+                            <th class="px-2 py-2">#</th>
+                            <th scope="col" class="px-4 py-3 text-nowrap">
+                                Fecha de Contacto
+                            </th>
+                            <th scope="col" class="px-4 py-3 text-nowrap">
+                                Fecha Programada
+                            </th>
+                            <th scope="col" class="px-4 py-3">Comentario</th>
+                            <th scope="col" class="px-4 py-3">Éxito</th>
+                            <th scope="col" class="px-4 py-3 text-nowrap">
+                                Fecha y Hora Registro
+                            </th>
+                            <th scope="col" class="px-4 py-3">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody
+                        class="text-slate-900 text-xs font-normal leading-none"
+                    >
+                        <tr
+                            v-for="(llamada, i) in detalle.llamadas"
+                            :key="llamada.id"
+                            class="bg-white border-b"
+                        >
+                            <td class="px-2 py-2">
+                                {{ i + 1 }}
+                            </td>
+                            <td class="px-4 py-2">
+                                {{ llamada.contact_date }}
+                            </td>
+                            <td class="px-4 py-2">
+                                {{
+                                    llamada.program_date
+                                        ? llamada.program_date
+                                        : "-"
+                                }}
+                            </td>
+                            <td class="px-4 py-2 min-w-40 max-w-40">
+                                {{ llamada.comment }}
+                            </td>
+                            <td class="px-4 py-2">
+                                <span
+                                    :class="{
+                                        'px-3 p-1 bg-green-500 text-white rounded-lg':
+                                            llamada.is_success,
+                                        'px-2 p-1 bg-red-500 text-white rounded-lg':
+                                            !llamada.is_success,
+                                    }"
+                                    >{{
+                                        llamada.is_success ? "Sí" : "No"
+                                    }}</span
+                                >
+                            </td>
+                            <td class="px-4 py-2">
+                                {{ formatFecha(llamada.created_at) }}
+                            </td>
+                            <td class="space-x-4 px-4 py-2">
+                                <button @click="abrirModal(llamada)">✏️</button>
+                                <button @click="eliminarLlamada(llamada.id)">
+                                    🗑️
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
         </div>
 
         <!-- Modal -->

@@ -89,7 +89,7 @@ const updatePerPage = (event) => {
         </template>
 
         <!-- Filtros -->
-        <section class="pt-12 space-y-4 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section class="pt-6 space-y-4 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <h3 class="text-lg font-semibold text-gray-800">Filtros</h3>
             <div class="flex flex-col lg:flex-row gap-4">
                 <!-- Filtro por cultivo -->
@@ -186,181 +186,175 @@ const updatePerPage = (event) => {
         </section>
 
         <!-- Tabla -->
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <section
-                    class="overflow-x-auto bg-white shadow-sm rounded-lg"
-                >
-                    <table class="w-full text-xs text-left text-gray-500">
-                        <thead
-                            class="text-xs text-gray-700 uppercase bg-white border-b"
+
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+            <section class="overflow-x-auto bg-white shadow-sm rounded-lg">
+                <table class="w-full text-xs text-left text-gray-500">
+                    <thead
+                        class="text-xs text-gray-700 uppercase bg-white border-b"
+                    >
+                        <tr>
+                            <th
+                                scope="col"
+                                class="px-3 py-3 sticky left-0 bg-white min-w-[100px]"
+                            >
+                                ID Aviso
+                            </th>
+                            <th scope="col" class="px-4 py-3">Póliza</th>
+                            <th scope="col" class="px-4 py-3">Cultivo</th>
+                            <th scope="col" class="px-4 py-3">Contratante</th>
+                            <th scope="col" class="px-4 py-3">Asegurado</th>
+                            <th scope="col" class="px-4 py-3">Departamento</th>
+                            <th scope="col" class="px-4 py-3">Provincia</th>
+                            <th scope="col" class="px-4 py-3">Distrito</th>
+                            <th scope="col" class="px-4 py-3">Dirección</th>
+                            <th scope="col" class="px-4 py-3">
+                                Tipo de Evento
+                            </th>
+                            <th scope="col" class="px-4 py-3">Inspector</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr
+                            v-for="sinprogramars in sinprogramar.data"
+                            class="bg-white border-b"
                         >
-                            <tr>
-                                <th
-                                    scope="col"
-                                    class="px-3 py-3 sticky left-0 bg-white min-w-[100px]"
-                                >
-                                    ID Aviso
-                                </th>
-                                <th scope="col" class="px-4 py-3">Póliza</th>
-                                <th scope="col" class="px-4 py-3">Cultivo</th>
-                                <th scope="col" class="px-4 py-3">
-                                    Contratante
-                                </th>
-                                <th scope="col" class="px-4 py-3">Asegurado</th>
-                                <th scope="col" class="px-4 py-3">
-                                    Departamento
-                                </th>
-                                <th scope="col" class="px-4 py-3">Provincia</th>
-                                <th scope="col" class="px-4 py-3">Distrito</th>
-                                <th scope="col" class="px-4 py-3">Dirección</th>
-                                <th scope="col" class="px-4 py-3">
-                                    Tipo de Evento
-                                </th>
-                                <th scope="col" class="px-4 py-3">Inspector</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr
-                                v-for="sinprogramars in sinprogramar.data"
-                                class="bg-white border-b"
+                            <th
+                                scope="row"
+                                class="font-medium text-gray-900 whitespace-nowrap sticky left-0 bg-white"
                             >
-                                <th
-                                    scope="row"
-                                    class="font-medium text-gray-900 whitespace-nowrap sticky left-0 bg-white"
+                                <Link
+                                    :href="
+                                        route(
+                                            'sinprogramar.show',
+                                            sinprogramars.id
+                                        )
+                                    "
+                                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded ml-3"
                                 >
-                                    <Link
-                                        :href="route('sinprogramar.show', sinprogramars.id)"
-                                        class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-4 rounded ml-3"
-                                    >
-                                        {{ sinprogramars.id_poliza }}
-                                    </Link>
-                                </th>
-                                <td class="px-2 py-2">
-                                    {{ sinprogramars.poliza }}
-                                </td>
-                                <td class="px-2 py-2">
-                                    {{ sinprogramars.cultivo }}
-                                </td>
-                                <td class="px-2 py-2">
-                                    {{ sinprogramars.contratante }}
-                                </td>
-                                <td class="px-2 py-2">
-                                    {{ sinprogramars.asegurado }}
-                                </td>
-                                <td class="px-2 py-2">
-                                    {{ sinprogramars.departamento }}
-                                </td>
-                                <td class="px-2 py-2">
-                                    {{ sinprogramars.provincia }}
-                                </td>
-                                <td class="px-2 py-2">
-                                    {{ sinprogramars.distrito }}
-                                </td>
-                                <td class="px-2 py-2">
-                                    {{ sinprogramars.direccion }}
-                                </td>
-                                <td class="px-2 py-2">
-                                    {{ sinprogramars.tipo_evento }}
-                                </td>
-                                <td class="px-2 py-2">
-                                    {{ sinprogramars.inspector }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
+                                    {{ sinprogramars.id_poliza }}
+                                </Link>
+                            </th>
+                            <td class="px-2 py-2">
+                                {{ sinprogramars.poliza }}
+                            </td>
+                            <td class="px-2 py-2">
+                                {{ sinprogramars.cultivo }}
+                            </td>
+                            <td class="px-2 py-2">
+                                {{ sinprogramars.contratante }}
+                            </td>
+                            <td class="px-2 py-2">
+                                {{ sinprogramars.asegurado }}
+                            </td>
+                            <td class="px-2 py-2">
+                                {{ sinprogramars.departamento }}
+                            </td>
+                            <td class="px-2 py-2">
+                                {{ sinprogramars.provincia }}
+                            </td>
+                            <td class="px-2 py-2">
+                                {{ sinprogramars.distrito }}
+                            </td>
+                            <td class="px-2 py-2">
+                                {{ sinprogramars.direccion }}
+                            </td>
+                            <td class="px-2 py-2">
+                                {{ sinprogramars.tipo_evento }}
+                            </td>
+                            <td class="px-2 py-2">
+                                {{ sinprogramars.inspector }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
 
-                <!-- Paginación -->
-                <div class="flex justify-between mt-4 flex-col sm:flex-row">
-                    <!-- Mostrando tanto de tantos registros -->
-                    <div class="flex justify-center items-center mt-4 sm:mt-0">
-                        <p class="text-sm text-gray-700">
-                            Mostrando {{ sinprogramar.from }} a
-                            {{ sinprogramar.to }} de
-                            {{ sinprogramar.total }} registros
-                        </p>
+            <!-- Paginación -->
+            <div class="flex justify-between mt-4 flex-col sm:flex-row">
+                <!-- Mostrando tanto de tantos registros -->
+                <div class="flex justify-center items-center mt-4 sm:mt-0">
+                    <p class="text-sm text-gray-700">
+                        Mostrando {{ sinprogramar.from }} a
+                        {{ sinprogramar.to }} de
+                        {{ sinprogramar.total }} registros
+                    </p>
+                </div>
+
+                <div class="flex justify-center mt-4 sm:mt-0 space-x-4">
+                    <!-- Selector para cambiar el número de registros por página -->
+                    <div>
+                        <label for="per-page" class="mr-2 text-sm"
+                            >Mostrar:</label
+                        >
+                        <select
+                            id="per-page"
+                            @change="updatePerPage"
+                            class="border border-gray-300 rounded-md text-xs"
+                        >
+                            <option value="5" :selected="perPage === 5">
+                                5
+                            </option>
+                            <option value="10" :selected="perPage === 10">
+                                10
+                            </option>
+                            <option value="15" :selected="perPage === 15">
+                                15
+                            </option>
+                        </select>
                     </div>
 
-                    <div class="flex justify-center mt-4 sm:mt-0 space-x-4">
-                        <!-- Selector para cambiar el número de registros por página -->
-                        <div>
-                            <label for="per-page" class="mr-2 text-sm"
-                                >Mostrar:</label
-                            >
-                            <select
-                                id="per-page"
-                                @change="updatePerPage"
-                                class="border border-gray-300 rounded-md text-xs"
-                            >
-                                <option value="5" :selected="perPage === 5">
-                                    5
-                                </option>
-                                <option value="10" :selected="perPage === 10">
-                                    10
-                                </option>
-                                <option value="15" :selected="perPage === 15">
-                                    15
-                                </option>
-                            </select>
-                        </div>
-
-                        <!-- Botones de Paginación -->
-                        <nav aria-label="Page navigation">
-                            <ul class="inline-flex -space-x-px text-sm">
-                                <!-- Botón "Anterior" -->
-                                <li>
-                                    <button
-                                        @click="
-                                            changePage(
-                                                sinprogramar.prev_page_url
-                                            )
-                                        "
-                                        :disabled="!sinprogramar.prev_page_url"
-                                        class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        <
-                                    </button>
-                                </li>
-
-                                <!-- Números de página -->
-                                <li
-                                    v-for="page in sinprogramar.last_page"
-                                    :key="page"
+                    <!-- Botones de Paginación -->
+                    <nav aria-label="Page navigation">
+                        <ul class="inline-flex -space-x-px text-sm">
+                            <!-- Botón "Anterior" -->
+                            <li>
+                                <button
+                                    @click="
+                                        changePage(sinprogramar.prev_page_url)
+                                    "
+                                    :disabled="!sinprogramar.prev_page_url"
+                                    class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    <button
-                                        @click="
-                                            changePage(
-                                                `${sinprogramar.path}?page=${page}`
-                                            )
-                                        "
-                                        :class="[
-                                            page === sinprogramar.current_page
-                                                ? 'z-10 flex items-center justify-center px-3 h-8 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
-                                                : 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700',
-                                        ]"
-                                    >
-                                        {{ page }}
-                                    </button>
-                                </li>
+                                    <
+                                </button>
+                            </li>
 
-                                <!-- Botón "Siguiente" -->
-                                <li>
-                                    <button
-                                        @click="
-                                            changePage(
-                                                sinprogramar.next_page_url
-                                            )
-                                        "
-                                        :disabled="!sinprogramar.next_page_url"
-                                        class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                            <!-- Números de página -->
+                            <li
+                                v-for="page in sinprogramar.last_page"
+                                :key="page"
+                            >
+                                <button
+                                    @click="
+                                        changePage(
+                                            `${sinprogramar.path}?page=${page}`
+                                        )
+                                    "
+                                    :class="[
+                                        page === sinprogramar.current_page
+                                            ? 'z-10 flex items-center justify-center px-3 h-8 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                                            : 'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700',
+                                    ]"
+                                >
+                                    {{ page }}
+                                </button>
+                            </li>
+
+                            <!-- Botón "Siguiente" -->
+                            <li>
+                                <button
+                                    @click="
+                                        changePage(sinprogramar.next_page_url)
+                                    "
+                                    :disabled="!sinprogramar.next_page_url"
+                                    class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
                                     >
-                                        >
-                                    </button>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
