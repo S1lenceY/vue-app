@@ -1,18 +1,12 @@
 <script setup>
-import AudioInput from "@/Components/AudioInput.vue";
-
 import { ref, onMounted } from "vue";
+import AudioInput from "@/Components/AudioInput.vue";
 
 // Definir las props
 const props = defineProps({
     detalle: Object, // Detalles del aviso sin programación
     formulario: Object,
     editando: Boolean,
-});
-
-console.log("Props recibidas:", props); // Depuración
-onMounted(() => {
-    console.log("Valor de editando al montar:", props.editando); // Depuración
 });
 
 // Emitir eventos al padre
@@ -22,12 +16,18 @@ const emit = defineEmits(["submit", "close"]);
 const form = ref(props.formulario);
 const audioFile = ref(null);
 
+// Depuración
+console.log("Props recibidas:", props);
+onMounted(() => {
+    console.log("Valor de editando al montar:", props.editando);
+});
+
 // Función para manejar el envío del formulario
 const handleSave = () => {
     const formData = new FormData();
-    formData.append("contact_date", form.value.contact_date || ""); // ✅ Asegurar que no sea undefined
+    formData.append("contact_date", form.value.contact_date || ""); // Asegurar valores no undefined
     formData.append("program_date", form.value.program_date || "");
-    formData.append("is_success", form.value.is_success ? "1" : "0"); // ✅ Convertir a booleano correcto
+    formData.append("is_success", form.value.is_success ? "1" : "0"); // Convertir a booleano correcto
     formData.append("comment", form.value.comment || "");
 
     if (audioFile.value) {
@@ -35,15 +35,17 @@ const handleSave = () => {
     }
 
     if (props.editando) {
-        formData.append("id", form.value.id); // ✅ Enviar el ID al editar
+        formData.append("id", form.value.id); // Enviar el ID si se está editando
     }
 
-    console.log("📤 Datos enviados desde handleSave:", Object.fromEntries(formData));
-
+    console.log(
+        "Datos enviados desde handleSave:",
+        Object.fromEntries(formData)
+    );
     emit("submit", formData);
 };
 
-
+// Función para manejar cambios en el archivo de audio
 const handleFileChange = (file) => {
     audioFile.value = file;
 };
@@ -112,8 +114,19 @@ const closeModal = () => {
                 <AudioInput name="file" @file-selected="handleFileChange" />
             </div>
             <div class="flex gap-3 text-sm h-full">
-                <button type="button" @click="closeModal" class="bg-white border border-green-500 hover:bg-green-500 text-gray-700 hover:text-white transition-colors px-3 py-2 rounded w-full">Cancelar</button>
-                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded w-full">Guardar</button>
+                <button
+                    type="button"
+                    @click="closeModal"
+                    class="bg-white border border-green-500 hover:bg-green-500 text-gray-700 hover:text-white transition-colors px-3 py-2 rounded w-full"
+                >
+                    Cancelar
+                </button>
+                <button
+                    type="submit"
+                    class="bg-green-500 hover:bg-green-700 text-white px-3 py-2 rounded w-full"
+                >
+                    Guardar
+                </button>
             </div>
         </div>
     </form>

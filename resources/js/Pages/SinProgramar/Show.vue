@@ -1,21 +1,27 @@
 <script setup>
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
-import { Head, Link } from "@inertiajs/vue3";
+/*Importaciones */
 import { ref } from "vue";
 import axios from "axios";
-import Modal from "@/Components/Modal.vue"; // Importar el componente Modal.vue
+import { Head, Link } from "@inertiajs/vue3";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Modal from "@/Components/Modal.vue";
 import ScheduleForm from "./ScheduleForm.vue";
 import ScheduleDelete from "./ScheduleDelete.vue";
 
-// Definir las props
+/*Definir Props */
 const props = defineProps({
     detalle: Object, // Detalles del aviso sin programación
 });
 
-// Estado local
+/*Estados Reactivos */
 const mostrarModal = ref(false);
 const editando = ref(false);
+const mostrarModalEliminar = ref(false);
+const llamadaAEliminar = ref(null);
+const cerrarModalGenerico = (modalEstado) => {
+    modalEstado.value = false;
+};
 
 const formulario = ref({
     contact_date: "",
@@ -25,32 +31,25 @@ const formulario = ref({
     audio_path: "",
 });
 
-// Función para abrir el modal
+/*Función para abrir el modal (Crear/Editar) */
 const abrirModal = (llamada) => {
-    if (llamada) {
-        editando.value = true;
-        console.log("Editando:", editando.value); // Depuración
-        formulario.value = { ...llamada };
-    } else {
-        editando.value = false;
-        console.log("Creando:", editando.value); // Depuración
-        formulario.value = {
-            contact_date: "",
-            program_date: "",
-            is_success: null,
-            comment: "",
-            audio_path: "",
-        };
-    }
-    mostrarModal.value = true; // Abrir el modal
+    editando.value = !!llamada; // Determina si estamos editando
+    formulario.value = llamada
+        ? { ...llamada }
+        : {
+              contact_date: "",
+              program_date: "",
+              is_success: null,
+              comment: "",
+              audio_path: "",
+          };
+    mostrarModal.value = true;
 };
 
-// Función para cerrar el modal
-const cerrarModal = () => {
-    mostrarModal.value = false; // Cerrar el modal
-};
+/*Función para cerrar el modal */
+const cerrarModal = () => cerrarModalGenerico(mostrarModal);
 
-// Función para guardar y editar una llamada
+/*Función para guardar/editar una llamada */
 const guardarLlamada = async (formData) => {
     try {
         console.log(
@@ -58,8 +57,7 @@ const guardarLlamada = async (formData) => {
             Object.fromEntries(formData)
         );
 
-        let url;
-        let method;
+        let url, method;
 
         if (editando.value) {
             url = route("llamadas.update", {
@@ -74,47 +72,41 @@ const guardarLlamada = async (formData) => {
         }
 
         const response = await axios({
-            method: method,
-            url: url,
+            method,
+            url,
             data: formData,
             headers: { "Content-Type": "multipart/form-data" },
         });
 
-        console.log("Respuesta del servidor:", response.data);
+        //alert("Llamada guardada con éxito."); // Notificación simple
+        console.log("✅ Respuesta del servidor:", response.data);
 
         const nuevaLlamada = response.data.detalle;
 
         if (editando.value) {
-            // ✅ Reemplazar la llamada editada en el array
+            //Reemplazar la llamada editada
             const index = props.detalle.llamadas.findIndex(
                 (llamada) => llamada.id === nuevaLlamada.id
             );
-            if (index !== -1) {
-                props.detalle.llamadas[index] = nuevaLlamada;
-            }
+            if (index !== -1) props.detalle.llamadas[index] = nuevaLlamada;
         } else {
-            // ✅ Agregar la nueva llamada al array
+            //Agregar nueva llamada
             props.detalle.llamadas.push(nuevaLlamada);
         }
 
         cerrarModal();
     } catch (error) {
-        console.error("Error al guardar la llamada:", error.response?.data);
+        console.error("❌ Error al guardar la llamada:", error.response?.data);
     }
 };
 
-// Función para eliminar una llamada
-const mostrarModalEliminar = ref(false);
-const llamadaAEliminar = ref(null);
-
+/*Funciones para eliminar una llamada */
 const abrirModalEliminar = (id) => {
     llamadaAEliminar.value = id;
     mostrarModalEliminar.value = true;
 };
 
-const cerrarModalEliminar = () => {
-    mostrarModalEliminar.value = false;
-};
+const cerrarModalEliminar = () => cerrarModalGenerico(mostrarModalEliminar);
 
 const confirmarEliminarLlamada = async () => {
     if (!llamadaAEliminar.value) return;
@@ -127,25 +119,29 @@ const confirmarEliminarLlamada = async () => {
             })
         );
 
-        console.log("Respuesta del servidor:", response.data);
+        console.log("✅ Respuesta del servidor:", response.data);
 
-        // ✅ Filtrar la llamada eliminada del array
+        // 🗑️ Filtrar la llamada eliminada
         props.detalle.llamadas = props.detalle.llamadas.filter(
             (llamada) => llamada.id !== llamadaAEliminar.value
         );
 
-        // Cerrar el modal y resetear valores
+        // Cerrar modal y resetear valores
         cerrarModalEliminar();
         llamadaAEliminar.value = null;
     } catch (error) {
-        console.error("Error al eliminar la llamada:", error);
+        console.error("❌ Error al eliminar la llamada:", error);
     }
 };
 
-// Formateo de fecha
+/*Función para formatear fechas */
 const formatFecha = (fecha) => {
     if (!fecha) return "-";
-    return new Intl.DateTimeFormat("es-PE", { dateStyle: "short", timeStyle: "medium", hour12: false }).format(new Date(fecha));
+    return new Intl.DateTimeFormat("es-PE", {
+        dateStyle: "short",
+        timeStyle: "medium",
+        hour12: false,
+    }).format(new Date(fecha));
 };
 </script>
 
