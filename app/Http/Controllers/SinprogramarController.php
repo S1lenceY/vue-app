@@ -78,17 +78,15 @@ class SinprogramarController extends Controller
 
         $data = $request->except('audio_file');
 
-        // Verificar si hay un archivo adjunto
         if ($request->hasFile('audio_file')) {
-          $audioPath = $request->file('audio_file')->store('audios', 'public');
-          $data['audio_path'] = $audioPath;
-         }
+            $data['audio_path'] = $request->file('audio_file')->store('audios', 'public');
+        }
 
-        // Crear la nueva llamada
-        $sinProgramar->llamadas()->create($data);
+        $llamada = $sinProgramar->llamadas()->create($data);
 
         return response()->json([
-            'detalle' => $sinProgramar->fresh('llamadas'),
+            'message' => 'Llamada creada con éxito',
+            'detalle' => $llamada->fresh(), // Devolvemos solo la nueva llamada
         ]);
     }
 
@@ -99,18 +97,22 @@ class SinprogramarController extends Controller
     {
         $llamada = Llamada::where('sinprogramar_id', $id)->findOrFail($llamadaId);
 
-        $data = $request->except('audio_file', '_method'); // ✅ Excluir "_method"
+        $data = $request->except('audio_file', '_method');
 
         if ($request->hasFile('audio_file')) {
-            $audioPath = $request->file('audio_file')->store('audios', 'public');
-            $data['audio_path'] = $audioPath;
+            // ✅ Si ya tenía un archivo, eliminarlo antes de guardar el nuevo
+            if ($llamada->audio_path) {
+                Storage::disk('public')->delete($llamada->audio_path);
+            }
+
+            $data['audio_path'] = $request->file('audio_file')->store('audios', 'public');
         }
 
         $llamada->update($data);
 
-        $sinProgramar = SinProgramar::findOrFail($id);
         return response()->json([
-            'detalle' => $sinProgramar->fresh('llamadas'),
+            'message' => 'Llamada actualizada con éxito',
+            'detalle' => $llamada->fresh(),
         ]);
     }
 
@@ -121,18 +123,15 @@ class SinprogramarController extends Controller
     {
         $llamada = Llamada::where('sinprogramar_id', $id)->findOrFail($llamadaId);
 
-        //Si existe un archivo de audio, eliminarlo del storage
         if ($llamada->audio_path) {
             Storage::disk('public')->delete($llamada->audio_path);
         }
 
-        // Eliminar la llamada
         $llamada->delete();
 
-        // Devolver los datos actualizados
-        $sinProgramar = sinprogramar::findOrFail($id);
         return response()->json([
-            'detalle' => $sinProgramar->fresh('llamadas'),
+            'message' => 'Llamada eliminada con éxito',
+            'id_eliminado' => $llamadaId,
         ]);
     }
 }

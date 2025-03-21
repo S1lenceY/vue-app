@@ -65,9 +65,9 @@ const guardarLlamada = async (formData) => {
             url = route("llamadas.update", {
                 id: props.detalle.id,
                 llamada: formData.get("id"),
-            }); // ✅ Usar el ID correcto
-            method = "post"; // ✅ Laravel no permite PUT con `multipart/form-data`, por eso usamos POST
-            formData.append("_method", "PUT"); // ✅ Simular PUT con POST
+            });
+            method = "post";
+            formData.append("_method", "PUT");
         } else {
             url = route("llamadas.store", { id: props.detalle.id });
             method = "post";
@@ -80,12 +80,26 @@ const guardarLlamada = async (formData) => {
             headers: { "Content-Type": "multipart/form-data" },
         });
 
-        console.log("✅ Respuesta del servidor:", response.data);
+        console.log("Respuesta del servidor:", response.data);
 
-        props.detalle.llamadas = response.data.detalle.llamadas;
+        const nuevaLlamada = response.data.detalle;
+
+        if (editando.value) {
+            // ✅ Reemplazar la llamada editada en el array
+            const index = props.detalle.llamadas.findIndex(
+                (llamada) => llamada.id === nuevaLlamada.id
+            );
+            if (index !== -1) {
+                props.detalle.llamadas[index] = nuevaLlamada;
+            }
+        } else {
+            // ✅ Agregar la nueva llamada al array
+            props.detalle.llamadas.push(nuevaLlamada);
+        }
+
         cerrarModal();
     } catch (error) {
-        console.error("❌ Error al guardar la llamada:", error.response?.data);
+        console.error("Error al guardar la llamada:", error.response?.data);
     }
 };
 
@@ -113,8 +127,12 @@ const confirmarEliminarLlamada = async () => {
             })
         );
 
-        // Actualizar el estado local con los datos devueltos por el servidor
-        props.detalle.llamadas = response.data.detalle.llamadas;
+        console.log("Respuesta del servidor:", response.data);
+
+        // ✅ Filtrar la llamada eliminada del array
+        props.detalle.llamadas = props.detalle.llamadas.filter(
+            (llamada) => llamada.id !== llamadaAEliminar.value
+        );
 
         // Cerrar el modal y resetear valores
         cerrarModalEliminar();
@@ -124,16 +142,10 @@ const confirmarEliminarLlamada = async () => {
     }
 };
 
+// Formateo de fecha
 const formatFecha = (fecha) => {
-    return new Date(fecha).toLocaleString("es-PE", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-    });
+    if (!fecha) return "-";
+    return new Intl.DateTimeFormat("es-PE", { dateStyle: "short", timeStyle: "medium", hour12: false }).format(new Date(fecha));
 };
 </script>
 
