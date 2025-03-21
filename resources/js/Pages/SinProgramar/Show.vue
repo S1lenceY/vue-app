@@ -1,5 +1,5 @@
 <script setup>
-/*Importaciones */
+/* Importaciones */
 import { ref } from "vue";
 import axios from "axios";
 import { Head, Link } from "@inertiajs/vue3";
@@ -9,132 +9,133 @@ import Modal from "@/Components/Modal.vue";
 import ScheduleForm from "./ScheduleForm.vue";
 import ScheduleDelete from "./ScheduleDelete.vue";
 
-/*Definir Props */
+/* Definir Props */
 const props = defineProps({
-    detalle: Object, // Detalles del aviso sin programación
+    detalle: {
+        type: Object,
+        required: true,
+        validator: (value) =>
+            value && value.id_poliza && Array.isArray(value.llamadas),
+    },
 });
 
-/*Estados Reactivos */
+/* Estados Reactivos */
+const llamadas = ref([...props.detalle.llamadas]); // ✅ Mantener reactividad
 const mostrarModal = ref(false);
 const editando = ref(false);
 const mostrarModalEliminar = ref(false);
 const llamadaAEliminar = ref(null);
-const cerrarModalGenerico = (modalEstado) => {
-    modalEstado.value = false;
-};
 
-const formulario = ref({
+// Resetear formulario
+const resetFormulario = () => ({
     contact_date: "",
-    program_date: null,
-    is_success: true,
+    program_date: "",
+    is_success: null,
     comment: "",
     audio_path: "",
 });
 
-/*Función para abrir el modal (Crear/Editar) */
-const abrirModal = (llamada) => {
-    editando.value = !!llamada; // Determina si estamos editando
-    formulario.value = llamada
-        ? { ...llamada }
-        : {
-              contact_date: "",
-              program_date: "",
-              is_success: null,
-              comment: "",
-              audio_path: "",
-          };
-    mostrarModal.value = true;
+const formulario = ref(resetFormulario());
+
+// Gestión de Modales
+const modalActivo = ref(null);
+
+const inicializarFormulario = (tipo, llamada = null) => {
+    if (tipo === "editar") {
+        editando.value = true;
+        formulario.value = { ...llamada };
+    } else if (tipo === "crear") {
+        editando.value = false;
+        formulario.value = resetFormulario();
+    } else if (tipo === "eliminar") {
+        llamadaAEliminar.value = llamada?.id || null;
+    }
 };
 
-/*Función para cerrar el modal */
-const cerrarModal = () => cerrarModalGenerico(mostrarModal);
+const abrirModal = (tipo, llamada = null) => {
+    modalActivo.value = tipo;
+    inicializarFormulario(tipo, llamada);
 
-/*Función para guardar/editar una llamada */
+    mostrarModal.value = tipo !== "eliminar"; // Si no es "eliminar", es "crear" o "editar"
+    mostrarModalEliminar.value = tipo === "eliminar";
+};
+
+const cerrarModal = async () => {
+    modalActivo.value = null;
+    mostrarModal.value = false;
+    mostrarModalEliminar.value = false;
+    formulario.value = resetFormulario();
+    llamadaAEliminar.value = null;
+};
+
+/* Función para hacer peticiones Axios */
+const enviarPeticion = async (url, method, data) => {
+    try {
+        const response = await axios({
+            method,
+            url,
+            data,
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error en la petición:", error.response?.data);
+        throw error;
+    }
+};
+
+/* Guardar/Editar Llamada */
 const guardarLlamada = async (formData) => {
     try {
-        console.log(
-            "📤 Datos recibidos en guardarLlamada:",
-            Object.fromEntries(formData)
-        );
-
-        let url, method;
+        let url = route("llamadas.store", { id: props.detalle.id });
+        let method = "post";
 
         if (editando.value) {
             url = route("llamadas.update", {
                 id: props.detalle.id,
                 llamada: formData.get("id"),
             });
-            method = "post";
             formData.append("_method", "PUT");
-        } else {
-            url = route("llamadas.store", { id: props.detalle.id });
-            method = "post";
         }
 
-        const response = await axios({
-            method,
-            url,
-            data: formData,
-            headers: { "Content-Type": "multipart/form-data" },
-        });
+        const response = await enviarPeticion(url, method, formData);
+        const nuevaLlamada = response.detalle;
 
-        //alert("Llamada guardada con éxito."); // Notificación simple
-        console.log("✅ Respuesta del servidor:", response.data);
-
-        const nuevaLlamada = response.data.detalle;
-
-        if (editando.value) {
-            //Reemplazar la llamada editada
-            const index = props.detalle.llamadas.findIndex(
-                (llamada) => llamada.id === nuevaLlamada.id
-            );
-            if (index !== -1) props.detalle.llamadas[index] = nuevaLlamada;
-        } else {
-            //Agregar nueva llamada
-            props.detalle.llamadas.push(nuevaLlamada);
-        }
+        // ✅ Reemplazar o añadir llamada
+        const index = llamadas.value.findIndex(
+            (ll) => ll.id === nuevaLlamada.id
+        );
+        if (index !== -1) llamadas.value[index] = nuevaLlamada;
+        else llamadas.value.push(nuevaLlamada);
 
         cerrarModal();
     } catch (error) {
-        console.error("❌ Error al guardar la llamada:", error.response?.data);
+        console.error("Error al guardar la llamada:", error);
     }
 };
 
-/*Funciones para eliminar una llamada */
-const abrirModalEliminar = (id) => {
-    llamadaAEliminar.value = id;
-    mostrarModalEliminar.value = true;
-};
-
-const cerrarModalEliminar = () => cerrarModalGenerico(mostrarModalEliminar);
-
+/* Eliminar Llamada */
 const confirmarEliminarLlamada = async () => {
     if (!llamadaAEliminar.value) return;
 
     try {
-        const response = await axios.delete(
-            route("llamadas.destroy", {
-                id: props.detalle.id,
-                llamada: llamadaAEliminar.value,
-            })
+        const url = route("llamadas.destroy", {
+            id: props.detalle.id,
+            llamada: llamadaAEliminar.value,
+        });
+
+        await enviarPeticion(url, "delete");
+
+        llamadas.value = llamadas.value.filter(
+            (ll) => ll.id !== llamadaAEliminar.value
         );
-
-        console.log("✅ Respuesta del servidor:", response.data);
-
-        // 🗑️ Filtrar la llamada eliminada
-        props.detalle.llamadas = props.detalle.llamadas.filter(
-            (llamada) => llamada.id !== llamadaAEliminar.value
-        );
-
-        // Cerrar modal y resetear valores
-        cerrarModalEliminar();
-        llamadaAEliminar.value = null;
+        await cerrarModal(); // ✅ Esperar que se elimine antes de cerrar modal
     } catch (error) {
-        console.error("❌ Error al eliminar la llamada:", error);
+        console.error("Error al eliminar la llamada:", error);
     }
 };
 
-/*Función para formatear fechas */
+/* Formatear fecha */
 const formatFecha = (fecha) => {
     if (!fecha) return "-";
     return new Intl.DateTimeFormat("es-PE", {
@@ -208,7 +209,9 @@ const formatFecha = (fecha) => {
         <div class="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8 py-6">
             <div class="flex justify-between items-center">
                 <h3 class="text-lg font-semibold text-gray-800">Llamadas</h3>
-                <PrimaryButton @click="abrirModal(null)">Añadir</PrimaryButton>
+                <PrimaryButton @click="abrirModal('crear')"
+                    >Añadir</PrimaryButton
+                >
             </div>
             <section class="overflow-x-auto bg-white shadow-sm rounded-lg">
                 <table class="w-full text-xs text-left text-gray-500">
@@ -236,13 +239,11 @@ const formatFecha = (fecha) => {
                         class="text-slate-900 text-xs font-normal leading-none"
                     >
                         <tr
-                            v-for="(llamada, i) in detalle.llamadas"
+                            v-for="(llamada, i) in llamadas"
                             :key="llamada.id"
                             class="bg-white border-b"
                         >
-                            <td class="px-2 py-2">
-                                {{ i + 1 }}
-                            </td>
+                            <td class="px-2 py-2">{{ i + 1 }}</td>
                             <td class="px-4 py-2">
                                 {{ llamada.contact_date }}
                             </td>
@@ -287,9 +288,17 @@ const formatFecha = (fecha) => {
                                 </audio>
                                 <span v-else>-</span>
                             </td>
-                            <td class="space-x-4 px-4 py-2">
-                                <button @click="abrirModal(llamada)">✏️</button>
-                                <button @click="abrirModalEliminar(llamada.id)">
+                            <td class="space-x-5 px-4 py-2 text-center">
+                                <button
+                                    @click="abrirModal('editar', llamada)"
+                                    class="scale-100 hover:scale-125"
+                                >
+                                    ✏️
+                                </button>
+                                <button
+                                    @click="abrirModal('eliminar', llamada)"
+                                    class="scale-100 hover:scale-125"
+                                >
                                     🗑️
                                 </button>
                             </td>
@@ -311,14 +320,10 @@ const formatFecha = (fecha) => {
         </Modal>
 
         <!-- Modal para Eliminar -->
-        <Modal
-            :show="mostrarModalEliminar"
-            @close="cerrarModalEliminar"
-            maxWidth="md"
-        >
+        <Modal :show="mostrarModalEliminar" @close="cerrarModal" maxWidth="md">
             <ScheduleDelete
                 :show="mostrarModalEliminar"
-                @close="cerrarModalEliminar"
+                @close="cerrarModal"
                 @confirm="confirmarEliminarLlamada"
             />
         </Modal>
