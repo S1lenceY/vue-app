@@ -2,6 +2,7 @@
 import { shallowRef } from "vue";
 
 // Referencias reactivas
+const emit = defineEmits(["file-selected"]);
 const fileRef = shallowRef(null);
 const fileMessage = shallowRef("Subir audio");
 
@@ -13,6 +14,7 @@ const handleUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
         fileMessage.value = file.name;
+        emit("file-selected", file);
     }
 };
 </script>

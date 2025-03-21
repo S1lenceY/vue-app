@@ -27,7 +27,7 @@ class UpdateRequest extends FormRequest
             'program_date' => 'nullable|date',
             'is_success' => 'required|boolean',
             'comment' => 'nullable|string',
-            'audio_path' => 'nullable|string',
+            'audio_path' => 'nullable|file|mimes:mp3,wav,ogg|max:10240',
         ];
     }
 }

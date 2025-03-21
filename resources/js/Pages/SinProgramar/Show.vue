@@ -51,26 +51,41 @@ const cerrarModal = () => {
 };
 
 // Función para guardar y editar una llamada
-const guardarLlamada = async () => {
+const guardarLlamada = async (formData) => {
     try {
-        const url = editando.value
-            ? route("llamadas.update", {
-                  id: props.detalle.id,
-                  llamada: formulario.value.id,
-              })
-            : route("llamadas.store", { id: props.detalle.id });
+        console.log(
+            "📤 Datos recibidos en guardarLlamada:",
+            Object.fromEntries(formData)
+        );
 
-        const method = editando.value ? "put" : "post";
+        let url;
+        let method;
 
-        const response = await axios[method](url, formulario.value);
+        if (editando.value) {
+            url = route("llamadas.update", {
+                id: props.detalle.id,
+                llamada: formData.get("id"),
+            }); // ✅ Usar el ID correcto
+            method = "post"; // ✅ Laravel no permite PUT con `multipart/form-data`, por eso usamos POST
+            formData.append("_method", "PUT"); // ✅ Simular PUT con POST
+        } else {
+            url = route("llamadas.store", { id: props.detalle.id });
+            method = "post";
+        }
 
-        // Actualizar el estado local con los datos devueltos por el servidor
+        const response = await axios({
+            method: method,
+            url: url,
+            data: formData,
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        console.log("✅ Respuesta del servidor:", response.data);
+
         props.detalle.llamadas = response.data.detalle.llamadas;
-
-        // Cerrar el modal
         cerrarModal();
     } catch (error) {
-        console.error("Error al guardar la llamada:", error);
+        console.error("❌ Error al guardar la llamada:", error.response?.data);
     }
 };
 
@@ -205,6 +220,7 @@ const formatFecha = (fecha) => {
                             <th scope="col" class="px-4 py-3 text-nowrap">
                                 Fecha y Hora Registro
                             </th>
+                            <th scope="col" class="px-4 py-3">Audio</th>
                             <th scope="col" class="px-4 py-3">Acciones</th>
                         </tr>
                     </thead>
@@ -247,6 +263,21 @@ const formatFecha = (fecha) => {
                             </td>
                             <td class="px-4 py-2">
                                 {{ formatFecha(llamada.created_at) }}
+                            </td>
+                            <td class="px-4 py-2">
+                                <audio
+                                    controls
+                                    v-if="llamada.audio_path"
+                                    class="w-48"
+                                >
+                                    <source
+                                        :src="`/storage/${llamada.audio_path}`"
+                                        type="audio/mpeg"
+                                    />
+                                    Tu navegador no soporta el elemento de
+                                    audio.
+                                </audio>
+                                <span v-else>-</span>
                             </td>
                             <td class="space-x-4 px-4 py-2">
                                 <button @click="abrirModal(llamada)">✏️</button>

@@ -20,10 +20,32 @@ const emit = defineEmits(["submit", "close"]);
 
 // Estado local del formulario
 const form = ref(props.formulario);
+const audioFile = ref(null);
 
 // Función para manejar el envío del formulario
 const handleSave = () => {
-    emit("submit"); // Emitir los datos del formulario al padre
+    const formData = new FormData();
+    formData.append("contact_date", form.value.contact_date || ""); // ✅ Asegurar que no sea undefined
+    formData.append("program_date", form.value.program_date || "");
+    formData.append("is_success", form.value.is_success ? "1" : "0"); // ✅ Convertir a booleano correcto
+    formData.append("comment", form.value.comment || "");
+
+    if (audioFile.value) {
+        formData.append("audio_file", audioFile.value);
+    }
+
+    if (props.editando) {
+        formData.append("id", form.value.id); // ✅ Enviar el ID al editar
+    }
+
+    console.log("📤 Datos enviados desde handleSave:", Object.fromEntries(formData));
+
+    emit("submit", formData);
+};
+
+
+const handleFileChange = (file) => {
+    audioFile.value = file;
 };
 
 // Función para cerrar el modal
@@ -87,7 +109,7 @@ const closeModal = () => {
         </div>
         <div class="flex flex-col md:flex-row justify-between md:items-center">
             <div class="mb-4 md:mb-0" v-if="!editando">
-                <AudioInput name="file"/>
+                <AudioInput name="file" @file-selected="handleFileChange" />
             </div>
             <div class="flex gap-3 text-sm h-full">
                 <button type="button" @click="closeModal" class="bg-white border border-green-500 hover:bg-green-500 text-gray-700 hover:text-white transition-colors px-3 py-2 rounded w-full">Cancelar</button>
