@@ -140,12 +140,12 @@ const updatePerPage = (event) => {
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm"
                     >
                         <option value="">Todos</option>
-                        <option value="ALEJANDRO_TORRES">Granizo</option>
+                        <option value="GRANIZO">Granizo</option>
                         <option value="INCENDIO">Incendio</option>
                         <option value="INUNDACIÓN">Inundación</option>
                         <option value="SEQUIA">Sequía</option>
                         <option value="VIENTO">Viento</option>
-                        <option value="OTROS">Otros</option>
+                        <option value="TEMPERATURA BAJA">Temperatura baja</option>
                     </select>
                 </div>
 
