@@ -192,16 +192,11 @@ const abrirEnGoogleMaps = (coordenadas) => {
                             class="text-gray-900 cursor-pointer hover:text-blue-600 transition-colors w-fit group relative"
                             @click="abrirEnGoogleMaps(detalle.direccion)"
                         >
-                            <span>{{ detalle.direccion }}</span>
                             <div
-                                class="bg-slate-100 p-2 rounded-md group-hover:flex hidden absolute top-1/2 -translate-y-1/2 -right-2 translate-x-full"
+                                class="flex items-center justify-center cursor-pointer rounded-md hover:text-blue-700 relative z-10 data-[tooltip]:after:content-[attr(data-tooltip)] data-[tooltip]:after:text-sm data-[tooltip]:after:invisible data-[tooltip]:after:scale-50 data-[tooltip]:after:origin-left data-[tooltip]:after:opacity-0 hover:data-[tooltip]:after:visible hover:data-[tooltip]:after:opacity-100 hover:data-[tooltip]:after:scale-100 data-[tooltip]:after:transition-all data-[tooltip]:after:absolute data-[tooltip]:after:bg-gray-100 data-[tooltip]:after:top-1/2 data-[tooltip]:after:left-[calc(100%+10px)] data-[tooltip]:after:-translate-y-1/2 data-[tooltip]:after:px-2.5 data-[tooltip]:after:py-1 data-[tooltip]:after:min-h-fit data-[tooltip]:after:min-w-fit data-[tooltip]:after:rounded-md data-[tooltip]:after:drop-shadow data-[tooltip]:after:text-center data-[tooltip]:after:text-zinc-800 data-[tooltip]:after:whitespace-nowrap data-[tooltip]:after:text-[10px] data-[tooltip]:before:invisible data-[tooltip]:before:opacity-0 hover:data-[tooltip]:before:visible hover:data-[tooltip]:before:opacity-100 data-[tooltip]:before:transition-all data-[tooltip]:before:bg-gray-100 data-[tooltip]:before:[clip-path:polygon(50%_0,0_100%,100%_100%)] data-[tooltip]:before:absolute data-[tooltip]:before:top-1/2 data-[tooltip]:before:left-full data-[tooltip]:before:-translate-y-1/2 data-[tooltip]:before:-rotate-90 data-[tooltip]:before:w-3 data-[tooltip]:before:h-[4px]"
+                                data-tooltip="Ir"
                             >
-                                <span class="text-zinc-400 whitespace-nowrap"
-                                    >Ir</span
-                                >
-                                <div
-                                    class="bg-inherit rotate-45 p-1 absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2"
-                                ></div>
+                                {{ detalle.direccion }}
                             </div>
                         </div>
                     </div>
