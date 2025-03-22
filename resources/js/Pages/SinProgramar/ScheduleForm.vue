@@ -13,7 +13,7 @@ const props = defineProps({
 const emit = defineEmits(["submit", "close"]);
 
 // Estado local del formulario
-const form = ref(props.formulario);
+const form = ref({ ...props.formulario });
 const audioFile = ref(null);
 
 // Depuración
@@ -22,12 +22,12 @@ onMounted(() => {
     console.log("Valor de editando al montar:", props.editando);
 });
 
-// Función para manejar el envío del formulario
-const handleSave = () => {
+// Función para preparar los datos del formulario
+const prepareFormData = () => {
     const formData = new FormData();
-    formData.append("contact_date", form.value.contact_date || ""); // Asegurar valores no undefined
+    formData.append("contact_date", form.value.contact_date || "");
     formData.append("program_date", form.value.program_date || "");
-    formData.append("is_success", form.value.is_success ? "1" : "0"); // Convertir a booleano correcto
+    formData.append("is_success", form.value.is_success ? "1" : "0");
     formData.append("comment", form.value.comment || "");
 
     if (audioFile.value) {
@@ -35,14 +35,25 @@ const handleSave = () => {
     }
 
     if (props.editando) {
-        formData.append("id", form.value.id); // Enviar el ID si se está editando
+        formData.append("id", form.value.id);
     }
 
-    console.log(
-        "Datos enviados desde handleSave:",
-        Object.fromEntries(formData)
-    );
+    return formData;
+};
+
+// Función para emitir el evento submit
+const emitSubmit = (formData) => {
     emit("submit", formData);
+};
+
+// Función para manejar el envío del formulario
+const handleSave = () => {
+    try {
+        const formData = prepareFormData();
+        emitSubmit(formData);
+    } catch (error) {
+        console.error("Error al preparar los datos:", error);
+    }
 };
 
 // Función para manejar cambios en el archivo de audio
