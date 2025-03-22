@@ -6,6 +6,7 @@ import { Head, Link } from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
+import MapComponent from "@/Components/MapComponent.vue";
 import ScheduleForm from "./ScheduleForm.vue";
 import ScheduleDelete from "./ScheduleDelete.vue";
 
@@ -144,6 +145,18 @@ const formatFecha = (fecha) => {
         hour12: false,
     }).format(new Date(fecha));
 };
+
+// Función para abrir Google Maps con las coordenadas
+const abrirEnGoogleMaps = (coordenadas) => {
+    // Parsear las coordenadas
+    const [lat, lng] = coordenadas.split(" ").map(Number);
+
+    // Construir la URL de Google Maps
+    const url = `https://www.google.com/maps?q=${lat},${lng}`;
+
+    // Abrir la URL en una nueva pestaña
+    window.open(url, "_blank");
+};
 </script>
 
 <template>
@@ -173,9 +186,14 @@ const formatFecha = (fecha) => {
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700"
-                            >Póliza:</label
+                            >Dirección:</label
                         >
-                        <p class="text-gray-900">{{ detalle.poliza }}</p>
+                        <p
+                            class="text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+                            @click="abrirEnGoogleMaps(detalle.direccion)"
+                        >
+                            {{ detalle.direccion }}
+                        </p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700"
@@ -202,6 +220,18 @@ const formatFecha = (fecha) => {
                         <p class="text-gray-900">{{ detalle.provincia }}</p>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Mapa -->
+        <section class="flex flex-col items-center px-4 sm:px-6 lg:px-8 py-6">
+            <div
+                class="flex flex-col w-full max-w-md bg-white p-4 space-y-4 rounded-md"
+            >
+                <h3 class="text-lg font-semibold text-gray-800 border-b">
+                    Mapa
+                </h3>
+                <MapComponent :coordinates="detalle.direccion" />
             </div>
         </section>
 
