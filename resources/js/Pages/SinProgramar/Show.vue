@@ -3,6 +3,7 @@
 import { ref } from "vue";
 import axios from "axios";
 import { Head, Link } from "@inertiajs/vue3";
+import { toast } from "vue3-toastify";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Modal from "@/Components/Modal.vue";
@@ -102,7 +103,7 @@ const guardarLlamada = async (formData) => {
         const response = await enviarPeticion(url, method, formData);
         const nuevaLlamada = response.detalle;
 
-        // ✅ Reemplazar o añadir llamada
+        //Reemplazar o añadir llamada
         const index = llamadas.value.findIndex(
             (ll) => ll.id === nuevaLlamada.id
         );
@@ -110,8 +111,10 @@ const guardarLlamada = async (formData) => {
         else llamadas.value.push(nuevaLlamada);
 
         cerrarModal();
+        mostrarNotificacion("success", "¡Llamada guardada!");
     } catch (error) {
         console.error("Error al guardar la llamada:", error);
+        mostrarNotificacion("error", "Ocurrió un error al guardar la llamada.");
     }
 };
 
@@ -131,8 +134,13 @@ const confirmarEliminarLlamada = async () => {
             (ll) => ll.id !== llamadaAEliminar.value
         );
         await cerrarModal(); // ✅ Esperar que se elimine antes de cerrar modal
+        mostrarNotificacion("success", "¡Llamada eliminada!");
     } catch (error) {
         console.error("Error al eliminar la llamada:", error);
+        mostrarNotificacion(
+            "error",
+            "Ocurrió un error al eliminar la llamada."
+        );
     }
 };
 
@@ -156,6 +164,22 @@ const abrirEnGoogleMaps = (coordenadas) => {
 
     // Abrir la URL en una nueva pestaña
     window.open(url, "_blank");
+};
+
+const mostrarNotificacion = (tipo, mensaje) => {
+    if (tipo === "success") {
+        toast.success(mensaje, {
+            position: toast.POSITION.TOP_RIGHT,
+            theme: "colored", // Aplica el tema coloreado
+            autoClose: 2000,
+        });
+    } else if (tipo === "error") {
+        toast.error(mensaje, {
+            position: toast.POSITION.TOP_RIGHT,
+            theme: "colored", // Aplica el tema coloreado
+            autoClose: 2000,
+        });
+    }
 };
 </script>
 
