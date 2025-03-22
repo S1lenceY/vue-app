@@ -22,7 +22,7 @@ const props = defineProps({
 });
 
 /* Estados Reactivos */
-const llamadas = ref([...props.detalle.llamadas]); // ✅ Mantener reactividad
+const llamadas = ref([...props.detalle.llamadas]); //Mantener reactividad
 const mostrarModal = ref(false);
 const editando = ref(false);
 const mostrarModalEliminar = ref(false);
@@ -133,7 +133,7 @@ const confirmarEliminarLlamada = async () => {
         llamadas.value = llamadas.value.filter(
             (ll) => ll.id !== llamadaAEliminar.value
         );
-        await cerrarModal(); // ✅ Esperar que se elimine antes de cerrar modal
+        await cerrarModal(); // Esperar que se elimine antes de cerrar modal
         mostrarNotificacion("success", "¡Llamada eliminada!");
     } catch (error) {
         console.error("Error al eliminar la llamada:", error);
