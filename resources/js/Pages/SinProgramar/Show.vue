@@ -200,7 +200,7 @@ const mostrarNotificacion = (tipo, mensaje) => {
         <!-- Detalles -->
         <section class="pt-6 mx-auto space-y-4 max-w-7xl px-4 sm:px-6 lg:px-8">
             <h3 class="text-lg font-semibold text-gray-800">Detalles</h3>
-            <div class="bg-white shadow-sm sm:rounded-lg p-6">
+            <div class="bg-white shadow-sm rounded-md p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-700"
@@ -255,7 +255,7 @@ const mostrarNotificacion = (tipo, mensaje) => {
         <!-- Mapa -->
         <section class="flex flex-col items-center px-4 sm:px-6 lg:px-8 py-6">
             <div
-                class="flex flex-col w-full max-w-md bg-white p-4 space-y-4 rounded-md"
+                class="flex flex-col w-full max-w-md bg-white p-4 space-y-4 rounded-md shadow-sm"
             >
                 <h3 class="text-lg font-semibold text-gray-800 border-b">
                     Mapa
@@ -302,21 +302,21 @@ const mostrarNotificacion = (tipo, mensaje) => {
                             :key="llamada.id"
                             class="bg-white border-b"
                         >
-                            <td class="px-2 py-2">{{ i + 1 }}</td>
-                            <td class="px-4 py-2">
+                            <td class="px-2 py-3">{{ i + 1 }}</td>
+                            <td class="px-4 py-3">
                                 {{ llamada.contact_date }}
                             </td>
-                            <td class="px-4 py-2">
+                            <td class="px-4 py-3">
                                 {{
                                     llamada.program_date
                                         ? llamada.program_date
                                         : "-"
                                 }}
                             </td>
-                            <td class="px-4 py-2 min-w-40 max-w-40">
+                            <td class="px-4 py-3 min-w-40 max-w-40">
                                 {{ llamada.comment }}
                             </td>
-                            <td class="px-4 py-2">
+                            <td class="px-4 py-3">
                                 <span
                                     :class="{
                                         'px-3 p-1 bg-green-500 text-white rounded-lg':
@@ -329,10 +329,10 @@ const mostrarNotificacion = (tipo, mensaje) => {
                                     }}</span
                                 >
                             </td>
-                            <td class="px-4 py-2">
+                            <td class="px-4 py-3">
                                 {{ formatFecha(llamada.created_at) }}
                             </td>
-                            <td class="px-4 py-2">
+                            <td class="px-4 py-3">
                                 <audio
                                     controls
                                     v-if="llamada.audio_path"
@@ -347,7 +347,7 @@ const mostrarNotificacion = (tipo, mensaje) => {
                                 </audio>
                                 <span v-else>-</span>
                             </td>
-                            <td class="space-x-5 px-4 py-2 text-center">
+                            <td class="space-x-5 px-4 py-3 text-center">
                                 <button
                                     @click="abrirModal('editar', llamada)"
                                     class="scale-100 hover:scale-125"
