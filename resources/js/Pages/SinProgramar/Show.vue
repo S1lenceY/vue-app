@@ -188,12 +188,22 @@ const abrirEnGoogleMaps = (coordenadas) => {
                         <label class="block text-sm font-medium text-gray-700"
                             >Dirección:</label
                         >
-                        <p
-                            class="text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+                        <div
+                            class="text-gray-900 cursor-pointer hover:text-blue-600 transition-colors w-fit group relative"
                             @click="abrirEnGoogleMaps(detalle.direccion)"
                         >
-                            {{ detalle.direccion }}
-                        </p>
+                            <span>{{ detalle.direccion }}</span>
+                            <div
+                                class="bg-slate-100 p-2 rounded-md group-hover:flex hidden absolute top-1/2 -translate-y-1/2 -right-2 translate-x-full"
+                            >
+                                <span class="text-zinc-400 whitespace-nowrap"
+                                    >Ir</span
+                                >
+                                <div
+                                    class="bg-inherit rotate-45 p-1 absolute top-1/2 -translate-y-1/2 left-0 -translate-x-1/2"
+                                ></div>
+                            </div>
+                        </div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700"
