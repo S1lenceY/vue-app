@@ -28,7 +28,7 @@ class SinprogramarController extends Controller
         ];
 
         // Construir la consulta base
-        $query = sinprogramar::where('user_id', Auth()->id());
+        $query = sinprogramar::query();
 
         // Aplicar filtros
         if ($filters['ubicacion']) {

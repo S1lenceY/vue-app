@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $cantidadSinProgramar = sinprogramar::where('user_id', Auth()->id())->count();
+        $cantidadSinProgramar = sinprogramar::count();
         return Inertia::render('Dashboard', compact('cantidadSinProgramar'));
     }
 }
