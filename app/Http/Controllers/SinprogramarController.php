@@ -62,6 +62,13 @@ class SinprogramarController extends Controller
      */
     public function show($id)
     {
+        $user = auth()->user();
+
+        // Verificar si el usuario tiene permiso
+        if (!$user->can('VIEW_LLAMADA')) {
+            return response()->json(['error' => 'Permiso denegado'], 403);
+        }
+
         //Buscar el registro por el ID
         $detalle = sinprogramar::with('llamadas')->findOrFail($id);
 
@@ -74,6 +81,12 @@ class SinprogramarController extends Controller
      */
     public function storeLlamada(StoreRequest $request, $id)
     {
+        $user = auth()->user();
+
+        if (!$user->can('CREATE_LLAMADA')) {
+            return response()->json(['error' => 'Permiso denegado'], 403);
+        }
+
         $sinProgramar = SinProgramar::findOrFail($id);
 
         $data = $request->except('audio_file');
@@ -95,6 +108,12 @@ class SinprogramarController extends Controller
     */
     public function updateLlamada(UpdateRequest $request, $id, $llamadaId)
     {
+        $user = auth()->user();
+
+        if (!$user->can('EDIT_LLAMADA')) {
+            return response()->json(['error' => 'Permiso denegado'], 403);
+        }
+
         $llamada = Llamada::where('sinprogramar_id', $id)->findOrFail($llamadaId);
 
         $data = $request->except('audio_file', '_method');
@@ -121,6 +140,12 @@ class SinprogramarController extends Controller
      */
     public function destroyLlamada($id, $llamadaId)
     {
+        $user = auth()->user();
+
+        if (!$user->can('DELETE_LLAMADA')) {
+            return response()->json(['error' => 'Permiso denegado'], 403);
+        }
+
         $llamada = Llamada::where('sinprogramar_id', $id)->findOrFail($llamadaId);
 
         if ($llamada->audio_path) {

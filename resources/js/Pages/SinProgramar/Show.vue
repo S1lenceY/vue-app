@@ -268,7 +268,7 @@ const mostrarNotificacion = (tipo, mensaje) => {
         <div class="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8 py-6">
             <div class="flex justify-between items-center">
                 <h3 class="text-lg font-semibold text-gray-800">Llamadas</h3>
-                <PrimaryButton @click="abrirModal('crear')"
+                <PrimaryButton v-if="$page.props.auth.user.permissions.includes('CREATE_LLAMADA')" @click="abrirModal('crear')"
                     >Añadir</PrimaryButton
                 >
             </div>
@@ -349,12 +349,14 @@ const mostrarNotificacion = (tipo, mensaje) => {
                             </td>
                             <td class="space-x-5 px-4 py-3 text-center">
                                 <button
+                                    v-if="$page.props.auth.user.permissions.includes('EDIT_LLAMADA')"
                                     @click="abrirModal('editar', llamada)"
                                     class="scale-100 hover:scale-125"
                                 >
                                     ✏️
                                 </button>
                                 <button
+                                    v-if="$page.props.auth.user.permissions.includes('DELETE_LLAMADA')"
                                     @click="abrirModal('eliminar', llamada)"
                                     class="scale-100 hover:scale-125"
                                 >

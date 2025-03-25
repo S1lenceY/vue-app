@@ -38,6 +38,7 @@ const showingNavigationDropdown = ref(false);
                                     Dashboard
                                 </NavLink>
                                 <NavLink
+                                    v-if="$page.props.auth.user.roles.includes('Admin')"
                                     :href="route('contact.index')"
                                     :active="route().current('contact.index')"
                                 >
@@ -152,6 +153,7 @@ const showingNavigationDropdown = ref(false);
                             Dashboard
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
+                            v-if="$page.props.auth.user.roles.includes('Admin')"
                             :href="route('contact.index')"
                             :active="route().current('contact.index')"
                         >
