@@ -18,8 +18,8 @@ Asegúrate de tener instalados los siguientes componentes en tu sistema:
 - PHP >= 8.0
 - Composer
 - Node.js >= 16.x
-- NPM o Yarn
-- MySQL o cualquier base de datos compatible con Laravel
+- NPM
+- MySQL
 
 ## Instalación
 
@@ -72,10 +72,10 @@ php artisan db:seed
 
 ## Servidor de Desarrollo (Laravel 12)
 
-Debido al Upgrade que tuvo el proyecto, ya no es necesario ejecutar los comandos en distintos terminales, solamente con este comando debería ser suficiente:
+Debido al upgrade que tuvo el proyecto (Laravel 11 -> Laravel 12), ya no es necesario ejecutar los comandos en distintos terminales, solamente con este comando debería ser suficiente:
 
 ```sh
-   compose run dev
+compose run dev
    ```
 
 Accede a la aplicación en `http://localhost:8000`.
