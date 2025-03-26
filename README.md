@@ -26,7 +26,7 @@ Asegúrate de tener instalados los siguientes componentes en tu sistema:
 1. Clona el repositorio:
 
    ```sh
-   git clone <URL_DEL_REPOSITORIO>
+   git clone https://github.com/S1lenceY/vue-app
    cd laravel-vue
    ```
 
