@@ -75,7 +75,7 @@ php artisan db:seed
 Debido al upgrade que tuvo el proyecto (Laravel 11 -> Laravel 12), ya no es necesario ejecutar los comandos en distintos terminales, solamente con este comando debería ser suficiente:
 
 ```sh
-compose run dev
+composer run dev
    ```
 
 Accede a la aplicación en `http://localhost:8000`.
