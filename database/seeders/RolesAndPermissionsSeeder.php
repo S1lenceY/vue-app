@@ -31,7 +31,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $adminUser = \App\Models\User::find(1); // Suponiendo que el usuario con ID 1 es admin
         $adminUser->assignRole('Admin');
 
-        $normalUser = \App\Models\User::find(3); // Suponiendo que el usuario con ID 2 es un usuario normal
-        $normalUser->assignRole('User');
+        //$normalUser = \App\Models\User::find(3); // Suponiendo que el usuario con ID 2 es un usuario normal
+        //$normalUser->assignRole('User');
     }
 }
