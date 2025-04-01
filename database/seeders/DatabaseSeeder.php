@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         // Crear primero el usuario de prueba
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'admin',
+            'email' => 'admin@gmail.com',
         ]);
 
         // Luego, ejecutar los otros seeders
