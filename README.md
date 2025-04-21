@@ -13,7 +13,7 @@ Este proyecto combina Laravel como backend y Vue.js como frontend para crear una
 
 ## Requisitos Previos
 
-Asegúrate de tener instalados los siguientes componentes en tu sistema:
+Asegúrate de tener instalado los siguientes componentes en tu sistema:
 
 -   PHP >= 8.0
 -   Composer
